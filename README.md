@@ -19,7 +19,7 @@ A: Yes, please open an issue ticket and request a new language.
 A: Try using the GeoRoots Fixer app to determine why is the file not getting accepted. Often times passing the file through the Fixer app will fix the issue. Always doublecheck the accuracy of the resulting features to confirm the original file was not in a different geocoordinate system. (Should be in WGS 84 / Web Mercarod Projection)
 
 
-## About GeoRoots: Open Source Coffee Industry Tools for EUDR Compliance and geo traceability
+## About GeoRoots: Open Source Toolkit for EUDR Compliance and geo traceability
 
 GeoRoots is a collection of minimalistic, open-source tools designed specifically for EU Deforestation Regulation (EUDR) requirements and enhancing geo traceability.
 
