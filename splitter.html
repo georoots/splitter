@@ -1,0 +1,1822 @@
+<!--
+    GeoJSON Splitter Tool
+    Copyright (C) 2025 GeoRoots
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Splitter - GeoRoots</title>
+    
+    <style>
+        /* CSS Variables for consistent color scheme */
+        :root {
+            --primary-color: #1b4332;
+            --secondary-color: #40916c;
+            --accent-color: #efffef;
+            --dark-color: #1b4332;
+            --light-color: #f8f9fa;
+            --danger-color: #dc6575;
+            --confirm-color: #40916c;
+            --text-color: #333;
+            --border-color: #e9ecef;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            
+            /* Gray Scale */
+            --gray-light: #f1f4f2;
+            --gray-medium: #6c757d;
+            --gray-dark: #495057;
+            --gray-border: #e9ecef;
+            --gray-input: #ddd;
+            
+            /* Basic Colors */
+            --white: #ffffff;
+            --black: #000000;
+            
+            /* Status Colors */
+            --error-bg: #f8d7da;
+            --error-border: #f5c6cb;
+            --error-text: #721c24;
+            --success-bg: #d4edda;
+            --success-border: #c3e6cb;
+            --success-text: #155724;
+            --warning-bg: #fff3cd;
+            --warning-border: #ffeaa7;
+            --warning-text: #856404;
+            
+            /* Overlay and UI Colors */
+            --modal-overlay: rgba(0, 0, 0, 0.7);
+            --loading-overlay: rgba(0, 0, 0, 0.6);
+            --spinner-bg: #f3f3f3;
+            
+            /* Hover States */
+            --danger-hover: #d14a5a;
+            --success-hover: #4a9f6b;
+            --secondary-hover: #2d5a3d;
+            
+            /* Special Elements */
+            --drop-border: #ccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background: var(--light-color);
+            min-height: 100vh;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .language-selector select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-selector select option {
+            background: var(--white);
+            color: var(--text-color);
+        }
+
+        .language-selector label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .header .small-print {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+
+        .header .small-print a {
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .content-area.showing-both {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .file-drop-area {
+            width: 100%;
+            height: 200px;
+            border: 3px dashed var(--drop-border);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            background-color: var(--gray-light);
+            cursor: pointer;
+        }
+
+        .file-drop-area.is-active {
+            border-color: var(--confirm-color);
+            background-color: rgba(88, 183, 117, 0.1);
+        }
+
+        .file-drop-area.has-error {
+            border-color: var(--danger-color);
+            background-color: rgba(220, 101, 117, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--gray-medium);
+            margin-bottom: 1rem;
+        }
+
+        .json-editor-container {
+            position: relative;
+            border: 1px solid var(--gray-input);
+            border-radius: 6px;
+            overflow: hidden;
+            height: 400px;
+            display: flex;
+            background: var(--white);
+        }
+
+        .json-editor-container.has-error {
+            border-color: var(--danger-color);
+        }
+
+        .line-numbers {
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-border);
+            padding: 10px 8px 10px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--gray-medium);
+            text-align: right;
+            user-select: none;
+            min-width: 50px;
+            overflow: hidden;
+            white-space: pre;
+            position: relative;
+        }
+
+        .json-editor {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: none;
+            padding: 10px;
+            resize: none;
+            outline: none;
+            line-height: 1.4;
+            background: var(--white);
+            overflow-y: auto;
+            overflow-x: auto;
+            white-space: pre;
+            word-wrap: break-word;
+            tab-size: 2;
+        }
+
+        .json-editor.has-error {
+            background-color: rgba(220, 101, 117, 0.05);
+        }
+
+        .json-editor::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .json-editor::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .json-editor::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 6px;
+        }
+
+        .json-editor::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .error-message {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid var(--error-border);
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid var(--success-border);
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .warning-message {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+            border: 1px solid var(--warning-border);
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .btn {
+            background: var(--confirm-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--confirm-color);
+        }
+
+        .btn-success:hover {
+            background: var(--success-hover);
+            box-shadow: 0 4px 12px rgba(74, 159, 107, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-medium);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-dark);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--gray-light);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--gray-border);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--confirm-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            margin-top: 5px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--loading-overlay);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            flex-direction: column;
+            color: white;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            border: 8px solid var(--spinner-bg);
+            border-top: 8px solid var(--confirm-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .button-group.hidden {
+            display: none !important;
+        }
+
+        .split-options {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .split-option {
+            background: var(--gray-light);
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .split-option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .split-option-header h4 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .split-option-content {
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .split-option-content.collapsed {
+            max-height: 0;
+            margin-top: 0;
+            opacity: 0;
+        }
+
+        .split-option.disabled {
+            opacity: 0.5;
+        }
+
+        .split-option.disabled .split-option-content {
+            pointer-events: none;
+        }
+
+        .split-option.disabled .toggle-switch {
+            pointer-events: auto;
+        }
+
+        .split-option h4 {
+            margin-bottom: 10px;
+            color: var(--gray-dark);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-input);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--gray-border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--confirm-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .download-links {
+            margin-top: 20px;
+        }
+
+        .download-link {
+            display: block;
+            padding: 10px;
+            background: var(--gray-light);
+            border: 1px solid var(--gray-border);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: var(--gray-dark);
+            transition: all 0.3s ease;
+        }
+
+        .download-link:hover {
+            background: var(--gray-border);
+            transform: translateY(-1px);
+        }
+
+        /* Large screens */
+        @media (min-width: 1200px) {
+            .content-area.showing-both {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* Medium screens */
+        @media (max-width: 1024px) {
+            body {
+                padding: 15px;
+            }
+            
+            .content-area {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+        }
+
+        /* Small screens */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px 15px 15px 15px;
+                min-height: 120px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+                margin-top: 40px;
+                margin-bottom: 8px;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .language-selector {
+                position: static;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+            
+            .file-drop-area {
+                min-height: 44px;
+            }
+            
+            .btn {
+                min-height: 44px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+                margin-top: 35px;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-container">
+            <div class="header">
+            <div class="language-selector">
+                <label for="languageSelect" aria-label="Select language">🌐</label>
+                <select id="languageSelect" aria-label="Language selection">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+            <h1 data-i18n="title">GeoJSON Splitter Tool</h1>
+            <p data-i18n="subtitle">Split your GeoJSON files by quantity, geolocation, or properties</p>
+            <p data-i18n="privacy" class="small-print">Your file and any of its content is only processed locally in your browser and none of your information is sent to anyone else.</p>
+            <p data-i18n="license" class="small-print">This software is free, released under GPLv3 open source license.</p>
+                            <p class="small-print"><span data-i18n="downloadLatest">Download latest version and other tools on</span> <a href="https://georoots.eu/" target="_blank" rel="noopener noreferrer">https://georoots.eu/</a></p>
+        </div>
+
+        <div class="content-area">
+            <!-- Input Panel -->
+            <div class="file-drop-area" id="dropArea">
+                <div class="upload-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        <path d="M12,12L16,16H13.5V19H10.5V16H8L12,12Z"/>
+                    </svg>
+                </div>
+                <p data-i18n="dropFile">Drop your GeoJSON/JSON file here</p>
+                <p data-i18n="orClickBrowse">or click to browse</p>
+                <input type="file" id="fileInput" accept=".json,.geojson" style="display: none;" aria-label="Upload GeoJSON file">
+            </div>
+
+            <div id="errorMessages"></div>
+
+            <!-- Processing Panel -->
+            <div id="fileStats" class="hidden">
+                        <div class="stats">
+                            <div class="stat-card">
+                                <span id="featureCount" class="stat-number">0</span>
+                                <div class="stat-label" data-i18n="features">Features</div>
+                            </div>
+                            <div class="stat-card">
+                                <span id="polygonCount" class="stat-number">0</span>
+                                <div class="stat-label" data-i18n="polygons">Polygons</div>
+                            </div>
+                            <div class="stat-card">
+                                <span id="multiPolygonCount" class="stat-number">0</span>
+                                <div class="stat-label" data-i18n="multiPolygons">MultiPolygons</div>
+                            </div>
+                            <div class="stat-card">
+                                <span id="pointCount" class="stat-number">0</span>
+                                <div class="stat-label" data-i18n="points">Points</div>
+                            </div>
+                            <div class="stat-card">
+                                <span id="duplicateGeometries" class="stat-number">0</span>
+                                <div class="stat-label" data-i18n="duplicateGeometries">Duplicate Geometries</div>
+                            </div>
+                            <div class="stat-card">
+                                <span id="totalArea" class="stat-number">N/A</span>
+                                <div class="stat-label" data-i18n="totalArea">Total Area</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="processingOptions" class="split-options hidden">
+                        <!-- Sort Section -->
+                        <div class="split-option" id="sortSection">
+                            <div class="split-option-header">
+                                <h4>📈 <span data-i18n="sortOptions">Sort Options</span></h4>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="sortToggle" checked autocomplete="off">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="split-option-content" id="sortContent">
+                                <div class="form-group">
+                                    <label for="sortOption" data-i18n="sortFeaturesBy">Sort features by:</label>
+                                    <select id="sortOption" autocomplete="off">
+                                        <option value="original" data-i18n="originalOrder">Original order</option>
+                                        <option value="east-west" data-i18n="eastToWest">East to West</option>
+                                        <option value="west-east" data-i18n="westToEast">West to East</option>
+                                        <option value="south-north" data-i18n="southToNorth">South to North</option>
+                                        <option value="north-south" data-i18n="northToSouth">North to South</option>
+                                        <option value="area" data-i18n="bySize">By size (Area parameter)</option>
+                                        <option value="producerName" data-i18n="byProducerName">By ProducerName</option>
+                                        <option value="placeReference" data-i18n="byPlaceReference">By PlaceReference property</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Section -->
+                        <div class="split-option" id="filterSection">
+                            <div class="split-option-header">
+                                <h4>🔍 <span data-i18n="filterOptions">Filter Options</span></h4>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="filterToggle" autocomplete="off">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="split-option-content collapsed" id="filterContent">
+                                <div class="form-group">
+                                    <label data-i18n="filterByBoundingBox">Filter by bounding box:</label>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="minLat" data-i18n="minLatitude">Min Latitude:</label>
+                                        <input type="number" id="minLat" step="any" placeholder="-90" autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="maxLat" data-i18n="maxLatitude">Max Latitude:</label>
+                                        <input type="number" id="maxLat" step="any" placeholder="90" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="minLng" data-i18n="minLongitude">Min Longitude:</label>
+                                        <input type="number" id="minLng" step="any" placeholder="-180" autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="maxLng" data-i18n="maxLongitude">Max Longitude:</label>
+                                        <input type="number" id="maxLng" step="any" placeholder="180" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-i18n="orFilterByDistance">Or filter by distance from point:</label>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="centerLat" data-i18n="centerLatitude">Center Latitude:</label>
+                                        <input type="number" id="centerLat" step="any" placeholder="Latitude" autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="centerLng" data-i18n="centerLongitude">Center Longitude:</label>
+                                        <input type="number" id="centerLng" step="any" placeholder="Longitude" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="distanceFromPoint" data-i18n="distanceInKm">Distance (km):</label>
+                                    <input type="number" id="distanceFromPoint" step="any" placeholder="Distance in km" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Split Section -->
+                        <div class="split-option" id="splitSection">
+                            <div class="split-option-header">
+                                <h4>✂️ <span data-i18n="splitOptions">Split Options</span></h4>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="splitToggle" checked autocomplete="off">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="split-option-content" id="splitContent">
+                                <div class="form-group">
+                                    <label for="splitMethod" data-i18n="splitMethod">Split method:</label>
+                                    <select id="splitMethod" autocomplete="off">
+                                        <option value="quantity" data-i18n="byQuantity">By Quantity</option>
+                                        <option value="property" data-i18n="byProperty">By Property</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="quantityOptions" class="form-group">
+                                    <label for="chunkSize" data-i18n="featuresPerChunk">Features per file:</label>
+                                    <input type="number" id="chunkSize" value="500" min="1" max="10000" autocomplete="off">
+                                </div>
+
+                                <div id="propertyOptions" class="form-group" style="display: none;">
+                                    <label for="propertySelect" data-i18n="selectPropertyToSplit">Select property to split by:</label>
+                                    <select id="propertySelect" autocomplete="off">
+                                        <option value="" data-i18n="selectProperty">Select a property...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="actionButtons" class="button-group hidden">
+                        <button id="processBtn" class="btn btn-success">
+                            ▶️ <span data-i18n="processGeoJSON">Process GeoJSON</span>
+                        </button>
+                        <button id="resetBtn" class="btn btn-danger">
+                            🔄 <span data-i18n="reset">Reset</span>
+                        </button>
+                    </div>
+
+                    <div class="progress-bar hidden" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+
+                    <div id="downloadLinks" class="download-links hidden">
+                        <h4>📁 <span data-i18n="downloadSplitFiles">Download Split Files</span></h4>
+                        <div id="downloadLinksContainer"></div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>Processing your GeoJSON...</p>
+    </div>
+
+    <script>
+        // Translation system
+        let translations = {
+            en: {
+                title: "GeoJSON Splitter Tool",
+                subtitle: "Split your GeoJSON files by quantity, geolocation, or properties",
+                privacy: "Your file and any of its content is only processed locally in your browser and none of your information is sent to anyone else.",
+                license: "This software is free, released under GPLv3 open source license.",
+                inputPanel: "Input",
+                processingPanel: "Processing",
+                dropFile: "Drop your GeoJSON/JSON file here",
+                orClickBrowse: "or click to browse",
+                features: "Features",
+                polygons: "Polygons",
+                multiPolygons: "MultiPolygons",
+                points: "Points",
+                duplicateGeometries: "Duplicate Geometries",
+                totalArea: "Total Area",
+                sortOptions: "Sort Options",
+                sortFeaturesBy: "Sort features by:",
+                originalOrder: "Original order",
+                eastToWest: "East to West",
+                westToEast: "West to East",
+                southToNorth: "South to North",
+                northToSouth: "North to South",
+                bySize: "By size (Area parameter)",
+                byProducerName: "By ProducerName",
+                byPlaceReference: "By PlaceReference property",
+                filterOptions: "Filter Options",
+                filterByBoundingBox: "Filter by bounding box:",
+                minLatitude: "Min Latitude:",
+                maxLatitude: "Max Latitude:",
+                minLongitude: "Min Longitude:",
+                maxLongitude: "Max Longitude:",
+                orFilterByDistance: "Or filter by distance from point:",
+                distanceInKm: "Distance (km):",
+                centerLatitude: "Center Latitude:",
+                centerLongitude: "Center Longitude:",
+                splitOptions: "Split Options",
+                splitMethod: "Split method:",
+                byQuantity: "By Quantity",
+                byProperty: "By Property",
+                featuresPerChunk: "Features per file:",
+                selectPropertyToSplit: "Select property to split by:",
+                selectProperty: "Select a property...",
+                processGeoJSON: "Process GeoJSON",
+                reset: "Reset",
+                downloadSplitFiles: "Download Split Files",
+                pleaseProvideJSON: "Please provide JSON content",
+                jsonValid: "JSON is valid!",
+                failedToReadFile: "Failed to read file: ",
+                fileTooLarge: "File is too large. Maximum size is 100MB.",
+                invalidGeoJSON: "Invalid GeoJSON structure",
+                invalidGeoJSONStructure: "Invalid GeoJSON structure",
+                missingTypeField: "Missing 'type' field",
+                invalidTypeField: "Invalid 'type' field",
+                invalidFeaturesArray: "Invalid 'features' array",
+                noValidDataToProcess: "No valid data to process",
+                processingFailed: "Processing failed: ",
+                successfullyProcessed: "Successfully processed ",
+                featuresCount: " features!",
+                useFixerApp: "Invalid GeoJSON detected. Please use the GeoJSON Fixer app to validate and fix your file before using the splitter.",
+                processingMessage: "Processing your GeoJSON...",
+                downloadLatest: "Download latest version and other tools on"
+            },
+            es: {
+                title: "Herramienta de División de GeoJSON",
+                subtitle: "Divide tus archivos GeoJSON por cantidad, geolocalización o propiedades",
+                privacy: "Tu archivo y todo su contenido se procesa únicamente localmente en tu navegador y ninguna de tu información se envía a nadie más.",
+                license: "Este software es gratuito, liberado bajo licencia de código abierto GPLv3.",
+                downloadLatest: "Descarga la última versión y otras herramientas en",
+                inputPanel: "Entrada",
+                processingPanel: "Procesamiento",
+                dropFile: "Suelta tu archivo GeoJSON/JSON aquí",
+                orClickBrowse: "o haz clic para explorar",
+                features: "Características",
+                polygons: "Polígonos",
+                multiPolygons: "MultiPolígonos",
+                points: "Puntos",
+                duplicateGeometries: "Geometrías Duplicadas",
+                totalArea: "Área Total",
+                sortOptions: "Opciones de Ordenamiento",
+                sortFeaturesBy: "Ordenar características por:",
+                originalOrder: "Orden original",
+                eastToWest: "Este a Oeste",
+                westToEast: "Oeste a Este",
+                southToNorth: "Sur a Norte",
+                northToSouth: "Norte a Sur",
+                bySize: "Por tamaño (parámetro Área)",
+                byProducerName: "Por NombreProductor",
+                byPlaceReference: "Por propiedad ReferenciaLugar",
+                filterOptions: "Opciones de Filtro",
+                filterByBoundingBox: "Filtrar por cuadro delimitador:",
+                minLatitude: "Latitud Mínima:",
+                maxLatitude: "Latitud Máxima:",
+                minLongitude: "Longitud Mínima:",
+                maxLongitude: "Longitud Máxima:",
+                orFilterByDistance: "O filtrar por distancia desde un punto:",
+                distanceInKm: "Distancia (km):",
+                centerLatitude: "Latitud del Centro:",
+                centerLongitude: "Longitud del Centro:",
+                splitOptions: "Opciones de División",
+                splitMethod: "Método de división:",
+                byQuantity: "Por Cantidad",
+                byProperty: "Por Propiedad",
+                featuresPerChunk: "Características por archivo:",
+                selectPropertyToSplit: "Seleccionar propiedad para dividir por:",
+                selectProperty: "Seleccionar una propiedad...",
+                processGeoJSON: "Procesar GeoJSON",
+                reset: "Reiniciar",
+                downloadSplitFiles: "Descargar Archivos Divididos",
+                pleaseProvideJSON: "Por favor proporciona contenido JSON",
+                jsonValid: "¡JSON es válido!",
+                failedToReadFile: "Error al leer archivo: ",
+                fileTooLarge: "El archivo es demasiado grande. Tamaño máximo es 100MB.",
+                invalidGeoJSON: "Estructura GeoJSON inválida",
+                invalidGeoJSONStructure: "Estructura GeoJSON inválida",
+                missingTypeField: "Campo 'type' faltante",
+                invalidTypeField: "Campo 'type' inválido",
+                invalidFeaturesArray: "Array 'features' inválido",
+                noValidDataToProcess: "No hay datos válidos para procesar",
+                processingFailed: "El procesamiento falló: ",
+                successfullyProcessed: "Procesado exitosamente ",
+                featuresCount: " características!",
+                useFixerApp: "GeoJSON inválido detectado. Por favor usa la aplicación GeoJSON Fixer para validar y corregir tu archivo antes de usar el divisor.",
+                processingMessage: "Procesando tu GeoJSON..."
+            },
+            pt: {
+                title: "Ferramenta de Divisão de GeoJSON",
+                subtitle: "Divida seus arquivos GeoJSON por quantidade, geolocalização ou propriedades",
+                privacy: "Seu arquivo e todo seu conteúdo é processado apenas localmente no seu navegador e nenhuma de suas informações é enviada para ninguém mais.",
+                license: "Este software é gratuito, liberado sob licença de código aberto GPLv3.",
+                downloadLatest: "Baixe a versão mais recente e outras ferramentas em",
+                inputPanel: "Entrada",
+                processingPanel: "Processamento",
+                dropFile: "Solte seu arquivo GeoJSON/JSON aqui",
+                orClickBrowse: "ou clique para navegar",
+                features: "Características",
+                polygons: "Polígonos",
+                multiPolygons: "MultiPolígonos",
+                points: "Pontos",
+                duplicateGeometries: "Geometrias Duplicadas",
+                totalArea: "Área Total",
+                sortOptions: "Opções de Ordenação",
+                sortFeaturesBy: "Ordenar características por:",
+                originalOrder: "Ordem original",
+                eastToWest: "Leste para Oeste",
+                westToEast: "Oeste para Leste",
+                southToNorth: "Sul para Norte",
+                northToSouth: "Norte para Sul",
+                bySize: "Por tamanho (parâmetro Área)",
+                byProducerName: "Por NomeProdutor",
+                byPlaceReference: "Por propriedade ReferênciaLugar",
+                filterOptions: "Opções de Filtro",
+                filterByBoundingBox: "Filtrar por caixa delimitadora:",
+                minLatitude: "Latitude Mínima:",
+                maxLatitude: "Latitude Máxima:",
+                minLongitude: "Longitude Mínima:",
+                maxLongitude: "Longitude Máxima:",
+                orFilterByDistance: "Ou filtrar por distância de um ponto:",
+                distanceInKm: "Distância (km):",
+                centerLatitude: "Latitude do Centro:",
+                centerLongitude: "Longitude do Centro:",
+                splitOptions: "Opções de Divisão",
+                splitMethod: "Método de divisão:",
+                byQuantity: "Por Quantidade",
+                byProperty: "Por Propriedade",
+                featuresPerChunk: "Características por arquivo:",
+                selectPropertyToSplit: "Selecionar propriedade para dividir por:",
+                selectProperty: "Selecionar uma propriedade...",
+                processGeoJSON: "Processar GeoJSON",
+                reset: "Reiniciar",
+                downloadSplitFiles: "Baixar Arquivos Divididos",
+                pleaseProvideJSON: "Por favor forneça conteúdo JSON",
+                jsonValid: "JSON é válido!",
+                failedToReadFile: "Falha ao ler arquivo: ",
+                fileTooLarge: "O arquivo é muito grande. Tamanho máximo é 100MB.",
+                invalidGeoJSON: "Estrutura GeoJSON inválida",
+                invalidGeoJSONStructure: "Estrutura GeoJSON inválida",
+                missingTypeField: "Campo 'type' ausente",
+                invalidTypeField: "Campo 'type' inválido",
+                invalidFeaturesArray: "Array 'features' inválido",
+                noValidDataToProcess: "Não há dados válidos para processar",
+                processingFailed: "O processamento falhou: ",
+                successfullyProcessed: "Processado com sucesso ",
+                featuresCount: " características!",
+                useFixerApp: "GeoJSON inválido detectado. Por favor use a aplicação GeoJSON Fixer para validar e corrigir seu arquivo antes de usar o divisor.",
+                processingMessage: "Processando seu GeoJSON..."
+            }
+        };
+
+        class GeoJSONSplitter {
+            constructor() {
+                let rawData = null;
+                let features = [];
+                let currentFileName = '';
+                let eventListeners = new Map();
+                let currentLanguage = 'en';
+                
+                this.rawData = rawData;
+                this.features = features;
+                this.currentFileName = currentFileName;
+                this.eventListeners = eventListeners;
+                this.currentLanguage = currentLanguage;
+                
+                this.initializeEventListeners();
+                this.initializeLanguage();
+            }
+
+            initializeEventListeners() {
+                const dropArea = document.getElementById('dropArea');
+                const fileInput = document.getElementById('fileInput');
+
+                // File upload handlers
+                this.addEventListener(dropArea, 'click', () => fileInput.click());
+                this.addEventListener(dropArea, 'dragover', this.handleDragOver.bind(this));
+                this.addEventListener(dropArea, 'dragleave', this.handleDragLeave.bind(this));
+                this.addEventListener(dropArea, 'drop', this.handleDrop.bind(this));
+                this.addEventListener(fileInput, 'change', this.handleFileSelect.bind(this));
+
+                // Button handlers
+                this.addEventListener(document.getElementById('processBtn'), 'click', this.processGeoJSON.bind(this));
+                this.addEventListener(document.getElementById('resetBtn'), 'click', this.reset.bind(this));
+
+                // Split method change handler
+                this.addEventListener(document.getElementById('splitMethod'), 'change', this.handleSplitMethodChange.bind(this));
+
+                // Language selector
+                this.addEventListener(document.getElementById('languageSelect'), 'change', this.changeLanguage.bind(this));
+
+                // Toggle switches for sections
+                this.addEventListener(document.getElementById('sortToggle'), 'change', this.handleSortToggle.bind(this));
+                this.addEventListener(document.getElementById('filterToggle'), 'change', this.handleFilterToggle.bind(this));
+                this.addEventListener(document.getElementById('splitToggle'), 'change', this.handleSplitToggle.bind(this));
+            }
+
+            addEventListener(element, event, handler) {
+                element.addEventListener(event, handler);
+                const key = `${element.id || 'unknown'}_${event}`;
+                if (!this.eventListeners.has(key)) {
+                    this.eventListeners.set(key, []);
+                }
+                this.eventListeners.get(key).push({ element, event, handler });
+            }
+
+            initializeLanguage() {
+                // Set default language or load from localStorage
+                const savedLanguage = localStorage.getItem('preferredLanguage') || 'en';
+                document.getElementById('languageSelect').value = savedLanguage;
+                this.currentLanguage = savedLanguage;
+                this.updateTranslations();
+            }
+
+            changeLanguage(event) {
+                this.currentLanguage = event.target.value;
+                localStorage.setItem('preferredLanguage', this.currentLanguage);
+                this.updateTranslations();
+            }
+
+            updateTranslations() {
+                const elements = document.querySelectorAll('[data-i18n]');
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    const translation = translations[this.currentLanguage][key];
+                    if (translation) {
+                        element.textContent = translation;
+                    }
+                });
+
+                // Handle select options
+                const selectOptions = document.querySelectorAll('option[data-i18n]');
+                selectOptions.forEach(option => {
+                    const key = option.getAttribute('data-i18n');
+                    const translation = translations[this.currentLanguage][key];
+                    if (translation) {
+                        option.textContent = translation;
+                    }
+                });
+            }
+
+            handleSplitMethodChange() {
+                const splitMethod = document.getElementById('splitMethod').value;
+                const quantityOptions = document.getElementById('quantityOptions');
+                const propertyOptions = document.getElementById('propertyOptions');
+                
+                if (splitMethod === 'quantity') {
+                    quantityOptions.style.display = 'block';
+                    propertyOptions.style.display = 'none';
+                } else if (splitMethod === 'property') {
+                    quantityOptions.style.display = 'none';
+                    propertyOptions.style.display = 'block';
+                }
+            }
+
+            handleSortToggle(event) {
+                const isChecked = event.target.checked;
+                const content = document.getElementById('sortContent');
+                const section = document.getElementById('sortSection');
+                
+                if (isChecked) {
+                    content.classList.remove('collapsed');
+                    section.classList.remove('disabled');
+                } else {
+                    content.classList.add('collapsed');
+                    section.classList.add('disabled');
+                }
+            }
+
+            handleFilterToggle(event) {
+                const isChecked = event.target.checked;
+                const content = document.getElementById('filterContent');
+                const section = document.getElementById('filterSection');
+                
+                if (isChecked) {
+                    content.classList.remove('collapsed');
+                    section.classList.remove('disabled');
+                } else {
+                    content.classList.add('collapsed');
+                    section.classList.add('disabled');
+                }
+            }
+
+            handleSplitToggle(event) {
+                const isChecked = event.target.checked;
+                const content = document.getElementById('splitContent');
+                const section = document.getElementById('splitSection');
+                
+                if (isChecked) {
+                    content.classList.remove('collapsed');
+                    section.classList.remove('disabled');
+                } else {
+                    content.classList.add('collapsed');
+                    section.classList.add('disabled');
+                }
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                document.getElementById('dropArea').classList.add('is-active');
+            }
+
+            handleDragLeave(e) {
+                e.preventDefault();
+                document.getElementById('dropArea').classList.remove('is-active');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                document.getElementById('dropArea').classList.remove('is-active');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.loadFile(files[0]);
+                }
+            }
+
+            handleFileSelect(e) {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    this.loadFile(files[0]);
+                }
+            }
+
+            async loadFile(file) {
+                try {
+                    const maxSize = 100 * 1024 * 1024; // 100MB
+                    if (file.size > maxSize) {
+                        this.showError(this.getTranslation('fileTooLarge'));
+                        return;
+                    }
+
+                    const text = await file.text();
+                    this.currentFileName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+                    this.validateAndProcessFile(text);
+                } catch (error) {
+                    this.showError(this.getTranslation('failedToReadFile') + error.message);
+                }
+            }
+
+            showProcessingOptions() {
+                // Hide file drop area and show processing options
+                document.getElementById('dropArea').classList.add('hidden');
+                document.getElementById('fileStats').classList.remove('hidden');
+                document.getElementById('processingOptions').classList.remove('hidden');
+                document.getElementById('actionButtons').classList.remove('hidden');
+            }
+
+            validateAndProcessFile(text) {
+                if (!text.trim()) {
+                    this.showError(this.getTranslation('pleaseProvideJSON'));
+                    return false;
+                }
+
+                try {
+                    const parsed = JSON.parse(text);
+                    const geoJSONValidation = this.validateGeoJSONStructure(parsed);
+                    if (!geoJSONValidation.isValid) {
+                        this.showError(this.getTranslation('useFixerApp'));
+                        return false;
+                    }
+                    
+                    this.rawData = parsed;
+                    this.clearErrors();
+                    this.showSuccess(this.getTranslation('jsonValid'));
+                    this.analyzeData();
+                    this.showProcessingOptions();
+                    return true;
+                } catch (error) {
+                    this.showError(this.getTranslation('useFixerApp'));
+                    return false;
+                }
+            }
+
+            validateGeoJSONStructure(data) {
+                if (!data || typeof data !== 'object') {
+                    return { isValid: false, error: this.getTranslation('invalidGeoJSONStructure') };
+                }
+
+                if (!data.type) {
+                    return { isValid: false, error: this.getTranslation('missingTypeField') };
+                }
+
+                const validTypes = ['Feature', 'FeatureCollection', 'Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'GeometryCollection'];
+                if (!validTypes.includes(data.type)) {
+                    return { isValid: false, error: this.getTranslation('invalidTypeField') };
+                }
+
+                if (data.type === 'FeatureCollection') {
+                    if (!Array.isArray(data.features)) {
+                        return { isValid: false, error: this.getTranslation('invalidFeaturesArray') };
+                    }
+                }
+
+                return { isValid: true };
+            }
+
+            analyzeData() {
+                if (!this.rawData) return;
+
+                let featureCount = 0;
+                let polygonCount = 0;
+                let multiPolygonCount = 0;
+                let pointCount = 0;
+                let properties = new Set();
+
+                this.features = this.extractFeatures(this.rawData);
+                
+                this.features.forEach(feature => {
+                    featureCount++;
+                    
+                    if (feature.geometry) {
+                        if (feature.geometry.type === 'Polygon') {
+                            polygonCount++;
+                        } else if (feature.geometry.type === 'MultiPolygon') {
+                            multiPolygonCount++;
+                        } else if (feature.geometry.type === 'Point') {
+                            pointCount++;
+                        }
+                    }
+
+                    if (feature.properties) {
+                        Object.keys(feature.properties).forEach(key => properties.add(key));
+                    }
+                });
+
+                // Calculate duplicate geometries
+                const duplicateCount = this.calculateDuplicateGeometries();
+                
+                // Calculate total area
+                const totalArea = this.calculateTotalArea();
+
+                this.updateStats(featureCount, polygonCount, multiPolygonCount, pointCount, duplicateCount, totalArea);
+                this.setupPropertySelect(Array.from(properties));
+                document.getElementById('fileStats').classList.remove('hidden');
+            }
+
+            updateStats(features, polygons, multiPolygons, points, duplicates, totalArea) {
+                document.getElementById('featureCount').textContent = features;
+                document.getElementById('polygonCount').textContent = polygons;
+                document.getElementById('multiPolygonCount').textContent = multiPolygons;
+                document.getElementById('pointCount').textContent = points;
+                document.getElementById('duplicateGeometries').textContent = duplicates;
+                document.getElementById('totalArea').textContent = totalArea;
+            }
+
+            calculateDuplicateGeometries() {
+                const geometryMap = new Map();
+                let duplicateCount = 0;
+
+                this.features.forEach(feature => {
+                    if (feature.geometry) {
+                        const geometryKey = JSON.stringify(feature.geometry);
+                        if (geometryMap.has(geometryKey)) {
+                            duplicateCount++;
+                        } else {
+                            geometryMap.set(geometryKey, true);
+                        }
+                    }
+                });
+
+                return duplicateCount;
+            }
+
+            calculateTotalArea() {
+                let totalArea = 0;
+                let hasAreaProperty = false;
+
+                this.features.forEach(feature => {
+                    if (feature.properties && feature.properties.Area) {
+                        const areaValue = parseFloat(feature.properties.Area);
+                        if (!isNaN(areaValue)) {
+                            totalArea += areaValue;
+                            hasAreaProperty = true;
+                        }
+                    }
+                });
+
+                return hasAreaProperty ? totalArea.toFixed(2) : 'N/A';
+            }
+
+            setupPropertySelect(existingProperties) {
+                const propertySelect = document.getElementById('propertySelect');
+                propertySelect.innerHTML = '<option value="">Select a property...</option>';
+                
+                existingProperties.forEach(prop => {
+                    const option = document.createElement('option');
+                    option.value = prop;
+                    option.textContent = prop;
+                    propertySelect.appendChild(option);
+                });
+            }
+
+            extractFeatures(data) {
+                const features = [];
+
+                if (data.type === 'FeatureCollection') {
+                    return data.features || [];
+                } else if (data.type === 'Feature') {
+                    return [data];
+                } else if (data.type && ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon'].includes(data.type)) {
+                    return [{
+                        type: 'Feature',
+                        geometry: data,
+                        properties: {}
+                    }];
+                } else if (Array.isArray(data)) {
+                    data.forEach(item => {
+                        features.push(...this.extractFeatures(item));
+                    });
+                }
+
+                return features;
+            }
+
+            async processGeoJSON() {
+                if (!this.rawData || this.features.length === 0) {
+                    this.showError(this.getTranslation('noValidDataToProcess'));
+                    return;
+                }
+
+                this.showLoading(true);
+                this.updateProgress(0);
+
+                try {
+                    let features = [...this.features];
+                    
+                    // Step 1: Sort features (if enabled)
+                    if (document.getElementById('sortToggle').checked) {
+                        const sortOption = document.getElementById('sortOption').value;
+                        features = this.sortFeatures(features, sortOption);
+                    }
+                    this.updateProgress(30);
+
+                    // Step 2: Filter features (if enabled)
+                    if (document.getElementById('filterToggle').checked) {
+                        features = this.filterFeatures(features);
+                    }
+                    this.updateProgress(60);
+
+                    // Step 3: Split features (if enabled)
+                    if (document.getElementById('splitToggle').checked) {
+                        const splitResults = this.splitFeatures(features);
+                        this.updateProgress(90);
+                        // Download split files
+                        this.downloadSplitFiles(splitResults);
+                    } else {
+                        // If split is disabled, just download the single file
+                        const singleResult = {
+                            name: 'single',
+                            features: features
+                        };
+                        this.downloadSplitFiles([singleResult]);
+                    }
+                    this.showSuccess(this.getTranslation('successfullyProcessed') + features.length + this.getTranslation('featuresCount'));
+                    
+                } catch (error) {
+                    this.showError(this.getTranslation('processingFailed') + error.message);
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            filterFeatures(features) {
+                const minLat = parseFloat(document.getElementById('minLat').value);
+                const maxLat = parseFloat(document.getElementById('maxLat').value);
+                const minLng = parseFloat(document.getElementById('minLng').value);
+                const maxLng = parseFloat(document.getElementById('maxLng').value);
+                const distanceFromPoint = parseFloat(document.getElementById('distanceFromPoint').value);
+                const centerLat = parseFloat(document.getElementById('centerLat').value);
+                const centerLng = parseFloat(document.getElementById('centerLng').value);
+
+                // If no filter is applied, return all features
+                if (!minLat && !maxLat && !minLng && !maxLng && !distanceFromPoint) {
+                    return features;
+                }
+
+                return features.filter(feature => {
+                    if (distanceFromPoint && !isNaN(centerLat) && !isNaN(centerLng)) {
+                        // Filter by distance from point
+                        const center = this.getFeatureCenter(feature);
+                        const distance = this.calculateDistance(centerLat, centerLng, center.lat, center.lng);
+                        return distance <= distanceFromPoint;
+                    } else {
+                        // Filter by bounding box
+                        const center = this.getFeatureCenter(feature);
+                        
+                        if (!isNaN(minLat) && center.lat < minLat) return false;
+                        if (!isNaN(maxLat) && center.lat > maxLat) return false;
+                        if (!isNaN(minLng) && center.lng < minLng) return false;
+                        if (!isNaN(maxLng) && center.lng > maxLng) return false;
+                        
+                        return true;
+                    }
+                });
+            }
+
+            splitFeatures(features) {
+                const splitMethod = document.getElementById('splitMethod').value;
+                
+                if (splitMethod === 'quantity') {
+                    return this.splitByQuantity(features);
+                } else if (splitMethod === 'property') {
+                    return this.splitByProperty(features);
+                } else {
+                    // Default to quantity if no method selected
+                    return this.splitByQuantity(features);
+                }
+            }
+
+            sortFeatures(features, sortOption) {
+                switch (sortOption) {
+                    case 'east-west':
+                        return features.sort((a, b) => {
+                            const aLng = this.getFeatureCenter(a).lng;
+                            const bLng = this.getFeatureCenter(b).lng;
+                            return bLng - aLng; // East to West
+                        });
+                    case 'west-east':
+                        return features.sort((a, b) => {
+                            const aLng = this.getFeatureCenter(a).lng;
+                            const bLng = this.getFeatureCenter(b).lng;
+                            return aLng - bLng; // West to East
+                        });
+                    case 'south-north':
+                        return features.sort((a, b) => {
+                            const aLat = this.getFeatureCenter(a).lat;
+                            const bLat = this.getFeatureCenter(b).lat;
+                            return aLat - bLat; // South to North
+                        });
+                    case 'north-south':
+                        return features.sort((a, b) => {
+                            const aLat = this.getFeatureCenter(a).lat;
+                            const bLat = this.getFeatureCenter(b).lat;
+                            return bLat - aLat; // North to South
+                        });
+                    case 'area':
+                        return features.sort((a, b) => {
+                            const aArea = this.getFeatureArea(a);
+                            const bArea = this.getFeatureArea(b);
+                            return bArea - aArea; // Largest first
+                        });
+                    case 'producerName':
+                        return features.sort((a, b) => {
+                            const aName = (a.properties?.ProducerName || '').toLowerCase();
+                            const bName = (b.properties?.ProducerName || '').toLowerCase();
+                            return aName.localeCompare(bName);
+                        });
+                    case 'placeReference':
+                        return features.sort((a, b) => {
+                            const aRef = (a.properties?.PlaceReference || '').toLowerCase();
+                            const bRef = (b.properties?.PlaceReference || '').toLowerCase();
+                            return aRef.localeCompare(bRef);
+                        });
+                    default:
+                        return features; // Original order
+                }
+            }
+
+            getFeatureCenter(feature) {
+                if (!feature.geometry || !feature.geometry.coordinates) {
+                    return { lat: 0, lng: 0 };
+                }
+
+                let center = { lat: 0, lng: 0 };
+                let count = 0;
+
+                if (feature.geometry.type === 'Point') {
+                    center = { lng: feature.geometry.coordinates[0], lat: feature.geometry.coordinates[1] };
+                } else if (feature.geometry.type === 'Polygon') {
+                    const coords = feature.geometry.coordinates[0]; // Use outer ring
+                    coords.forEach(coord => {
+                        center.lng += coord[0];
+                        center.lat += coord[1];
+                        count++;
+                    });
+                } else if (feature.geometry.type === 'MultiPolygon') {
+                    feature.geometry.coordinates.forEach(polygon => {
+                        polygon[0].forEach(coord => {
+                            center.lng += coord[0];
+                            center.lat += coord[1];
+                            count++;
+                        });
+                    });
+                }
+
+                if (count > 0) {
+                    center.lng /= count;
+                    center.lat /= count;
+                }
+
+                return center;
+            }
+
+            getFeatureArea(feature) {
+                if (!feature.properties?.Area) {
+                    return 0;
+                }
+                return parseFloat(feature.properties.Area) || 0;
+            }
+
+            splitByQuantity(features) {
+                const chunkSize = parseInt(document.getElementById('chunkSize').value);
+                const results = [];
+                
+                for (let i = 0; i < features.length; i += chunkSize) {
+                    const chunk = features.slice(i, i + chunkSize);
+                    results.push({
+                        features: chunk,
+                        name: `part_${Math.floor(i / chunkSize) + 1}_of_${Math.ceil(features.length / chunkSize)}`
+                    });
+                }
+                
+                return results;
+            }
+
+
+
+            splitByProperty(features) {
+                const propertyName = document.getElementById('propertySelect').value;
+                const propertyGroups = new Map();
+
+                features.forEach(feature => {
+                    const propertyValue = feature.properties?.[propertyName] || 'unknown';
+                    if (!propertyGroups.has(propertyValue)) {
+                        propertyGroups.set(propertyValue, []);
+                    }
+                    propertyGroups.get(propertyValue).push(feature);
+                });
+
+                const results = [];
+                propertyGroups.forEach((groupFeatures, propertyValue) => {
+                    results.push({
+                        features: groupFeatures,
+                        name: `by_${propertyName}_${propertyValue}`
+                    });
+                });
+
+                return results;
+            }
+
+            calculateDistance(lat1, lng1, lat2, lng2) {
+                const R = 6371; // Earth's radius in km
+                const dLat = this.toRadians(lat2 - lat1);
+                const dLng = this.toRadians(lng2 - lng1);
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                         Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
+                         Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c;
+            }
+
+            toRadians(degrees) {
+                return degrees * (Math.PI / 180);
+            }
+
+            downloadSplitFiles(splitResults) {
+                const container = document.getElementById('downloadLinksContainer');
+                container.innerHTML = '';
+
+                splitResults.forEach((result, index) => {
+                    const geoJSON = {
+                        type: 'FeatureCollection',
+                        features: result.features
+                    };
+
+                    const blob = new Blob([JSON.stringify(geoJSON, null, 2)], {
+                        type: 'application/json'
+                    });
+                    
+                    const url = URL.createObjectURL(blob);
+                    const fileName = `${this.currentFileName}_${result.name}.geojson`;
+                    
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = fileName;
+                    link.className = 'download-link';
+                    link.innerHTML = `📁 ${fileName} (${result.features.length} features)`;
+                    
+                    container.appendChild(link);
+                    
+                    // Auto-download after a short delay
+                    setTimeout(() => {
+                        link.click();
+                        URL.revokeObjectURL(url);
+                    }, 100 * (index + 1));
+                });
+
+                document.getElementById('downloadLinks').classList.remove('hidden');
+            }
+
+            reset() {
+                this.rawData = null;
+                this.features = [];
+                this.currentFileName = '';
+
+                document.getElementById('errorMessages').innerHTML = '';
+                document.getElementById('fileInput').value = '';
+                
+                // Reset all form inputs to their default state (except language selector)
+                const formElements = document.querySelectorAll('input, select, textarea');
+                formElements.forEach(element => {
+                    // Skip the language selector to preserve user preference
+                    if (element.id === 'languageSelect') {
+                        return;
+                    }
+                    
+                    if (element.type === 'checkbox') {
+                        element.checked = element.defaultChecked;
+                    } else if (element.type === 'radio') {
+                        element.checked = element.defaultChecked;
+                    } else if (element.tagName === 'SELECT') {
+                        element.selectedIndex = 0;
+                    } else {
+                        element.value = element.defaultValue || '';
+                    }
+                });
+                
+                // Add missing CSS classes for default UI state
+                const filterSection = document.getElementById('filterSection');
+                if (filterSection) {
+                    filterSection.classList.add('disabled');
+                }
+                
+                // Show file drop area and hide processing options
+                document.getElementById('dropArea').classList.remove('hidden');
+                document.getElementById('fileStats').classList.add('hidden');
+                document.getElementById('processingOptions').classList.add('hidden');
+                document.getElementById('actionButtons').classList.add('hidden');
+                document.getElementById('downloadLinks').classList.add('hidden');
+            }
+
+            getTranslation(key) {
+                return translations[this.currentLanguage][key] || key;
+            }
+
+
+
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = `⚠️ ${message}`;
+                
+                const container = document.getElementById('errorMessages');
+                container.innerHTML = '';
+                container.appendChild(errorDiv);
+            }
+
+            showSuccess(message) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'success-message';
+                successDiv.innerHTML = `✔️ ${message}`;
+                
+                const container = document.getElementById('errorMessages');
+                container.innerHTML = '';
+                container.appendChild(successDiv);
+            }
+
+            clearErrors() {
+                document.getElementById('errorMessages').innerHTML = '';
+            }
+
+            showLoading(show) {
+                const overlay = document.getElementById('loadingOverlay');
+                if (show) {
+                    overlay.classList.add('show');
+                } else {
+                    overlay.classList.remove('show');
+                }
+            }
+
+            updateProgress(percent) {
+                const progressBar = document.getElementById('progressBar');
+                const progressFill = document.getElementById('progressFill');
+                
+                if (percent > 0) {
+                    progressBar.classList.remove('hidden');
+                    progressFill.style.width = percent + '%';
+                    
+                    if (percent >= 100) {
+                        setTimeout(() => {
+                            progressBar.classList.add('hidden');
+                        }, 1000);
+                    }
+                }
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            const splitter = new GeoJSONSplitter();
+            // Reset form elements to prevent browser retention on page load
+            splitter.reset();
+        });
+    </script>
+</body>
+</html> 
