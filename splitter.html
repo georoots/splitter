@@ -601,6 +601,234 @@
             transform: translateY(-1px);
         }
 
+        /* Sub-filter styling */
+        .sub-filter {
+            background: var(--white);
+            border: 1px solid var(--gray-border);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .sub-filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sub-filter-header h5 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--gray-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sub-filter-content {
+            margin-top: 12px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sub-filter-content.collapsed {
+            max-height: 0;
+            margin-top: 0;
+            opacity: 0;
+        }
+
+        .sub-filter.disabled {
+            opacity: 0.5;
+        }
+
+        .sub-filter.disabled .sub-filter-content {
+            pointer-events: none;
+        }
+
+        .sub-filter.disabled .toggle-switch {
+            pointer-events: auto;
+        }
+
+        /* Filter preview panel */
+        .filter-preview-panel {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--white) 100%);
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .preview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            position: relative;
+        }
+
+        .preview-stat {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: transform 0.2s ease;
+        }
+
+        .preview-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-label {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .preview-value {
+            font-weight: 700;
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .preview-stat.preview-total .preview-value {
+            color: var(--primary-color);
+        }
+
+        .preview-stat.preview-passed .preview-value {
+            color: var(--confirm-color);
+        }
+
+        .preview-stat.preview-filtered .preview-value {
+            color: var(--danger-color);
+        }
+
+        .preview-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+            z-index: 10;
+            min-height: 100px;
+        }
+
+        .preview-loading span {
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+
+        .mini-spinner {
+            border: 3px solid var(--spinner-bg);
+            border-top: 3px solid var(--confirm-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Checkbox group styling */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .checkbox-label span {
+            user-select: none;
+        }
+
+        /* CRS Warning Modal */
+        .crs-warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--modal-overlay);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crs-warning-modal.show {
+            display: flex;
+        }
+
+        .crs-warning-content {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .crs-warning-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .crs-warning-icon {
+            font-size: 3rem;
+            color: var(--danger-color);
+        }
+
+        .crs-warning-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--danger-color);
+        }
+
+        .crs-warning-body {
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .crs-warning-body p {
+            margin-bottom: 15px;
+        }
+
+        .crs-warning-body strong {
+            color: var(--primary-color);
+        }
+
+        .crs-warning-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
         /* Large screens */
         @media (min-width: 1200px) {
             .content-area.showing-both {
@@ -783,46 +1011,227 @@
                                 </label>
                             </div>
                             <div class="split-option-content collapsed" id="filterContent">
-                                <div class="form-group">
-                                    <label data-i18n="filterByBoundingBox">Filter by bounding box:</label>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="minLat" data-i18n="minLatitude">Min Latitude:</label>
-                                        <input type="number" id="minLat" step="any" placeholder="-90" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="maxLat" data-i18n="maxLatitude">Max Latitude:</label>
-                                        <input type="number" id="maxLat" step="any" placeholder="90" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="minLng" data-i18n="minLongitude">Min Longitude:</label>
-                                        <input type="number" id="minLng" step="any" placeholder="-180" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="maxLng" data-i18n="maxLongitude">Max Longitude:</label>
-                                        <input type="number" id="maxLng" step="any" placeholder="180" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label data-i18n="orFilterByDistance">Or filter by distance from point:</label>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="centerLat" data-i18n="centerLatitude">Center Latitude:</label>
-                                        <input type="number" id="centerLat" step="any" placeholder="Latitude" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="centerLng" data-i18n="centerLongitude">Center Longitude:</label>
-                                        <input type="number" id="centerLng" step="any" placeholder="Longitude" autocomplete="off">
+                                
+                                <!-- Filter Preview Panel -->
+                                <div class="filter-preview-panel" id="filterPreviewPanel" style="display: none;">
+                                    <div class="preview-stats">
+                                        <div class="preview-stat preview-total">
+                                            <span class="preview-label" data-i18n="totalFeaturesLoaded">Total features loaded</span>
+                                            <span class="preview-value" id="previewTotalFeatures">0</span>
+                                        </div>
+                                        <div class="preview-stat preview-passed">
+                                            <span class="preview-label" data-i18n="featuresAfterFiltering">After filtering</span>
+                                            <span class="preview-value" id="previewPassedFeatures">0 (0%)</span>
+                                        </div>
+                                        <div class="preview-stat preview-filtered">
+                                            <span class="preview-label" data-i18n="featuresFilteredOut">Filtered out</span>
+                                            <span class="preview-value" id="previewFilteredFeatures">0 (0%)</span>
+                                        </div>
+                                        <div class="preview-loading" id="previewLoading" style="display: none;">
+                                            <div class="mini-spinner"></div>
+                                            <span data-i18n="calculating">Calculating...</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="distanceFromPoint" data-i18n="distanceInKm">Distance (km):</label>
-                                    <input type="number" id="distanceFromPoint" step="any" placeholder="Distance in km" autocomplete="off">
+
+                                <!-- Sub-filter 1: Bounding Box / Distance -->
+                                <div class="sub-filter" id="locationFilterSection">
+                                    <div class="sub-filter-header">
+                                        <h5>📍 <span data-i18n="locationFilter">Location Filter</span></h5>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="locationFilterToggle" autocomplete="off">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="sub-filter-content collapsed" id="locationFilterContent">
+                                        <div class="form-group">
+                                            <label for="locationFilterMode" data-i18n="filterMode">Filter mode:</label>
+                                            <select id="locationFilterMode" autocomplete="off">
+                                                <option value="any" data-i18n="anyVertex">Any vertex in area</option>
+                                                <option value="all" data-i18n="allVertices">All vertices in area</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-i18n="filterByBoundingBox">Filter by bounding box:</label>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="minLat" data-i18n="minLatitude">Min Latitude:</label>
+                                                <input type="number" id="minLat" step="any" placeholder="-90" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="maxLat" data-i18n="maxLatitude">Max Latitude:</label>
+                                                <input type="number" id="maxLat" step="any" placeholder="90" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="minLng" data-i18n="minLongitude">Min Longitude:</label>
+                                                <input type="number" id="minLng" step="any" placeholder="-180" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="maxLng" data-i18n="maxLongitude">Max Longitude:</label>
+                                                <input type="number" id="maxLng" step="any" placeholder="180" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-i18n="orFilterByDistance">Or filter by distance from point:</label>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="centerLat" data-i18n="centerLatitude">Center Latitude:</label>
+                                                <input type="number" id="centerLat" step="any" placeholder="Latitude" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="centerLng" data-i18n="centerLongitude">Center Longitude:</label>
+                                                <input type="number" id="centerLng" step="any" placeholder="Longitude" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="distanceFromPoint" data-i18n="distanceInKm">Distance (km):</label>
+                                            <input type="number" id="distanceFromPoint" step="any" placeholder="Distance in km" autocomplete="off">
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <!-- Sub-filter 2: Property Value -->
+                                <div class="sub-filter" id="propertyFilterSection">
+                                    <div class="sub-filter-header">
+                                        <h5>🏷️ <span data-i18n="propertyValueFilter">Property Value Filter</span></h5>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="propertyFilterToggle" autocomplete="off">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="sub-filter-content collapsed" id="propertyFilterContent">
+                                        <div class="form-group">
+                                            <label for="filterPropertySelect" data-i18n="selectProperty">Select property:</label>
+                                            <select id="filterPropertySelect" autocomplete="off">
+                                                <option value="" data-i18n="selectProperty">Select a property...</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="propertyDataType" data-i18n="dataType">Data type:</label>
+                                            <select id="propertyDataType" autocomplete="off">
+                                                <option value="number" data-i18n="number">Number</option>
+                                                <option value="text" data-i18n="alphabetical">Alphabetical</option>
+                                            </select>
+                                        </div>
+                                        <div id="numberFilterOptions">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="propertyMinValue" data-i18n="minValue">Min Value:</label>
+                                                    <input type="number" id="propertyMinValue" step="any" autocomplete="off">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="propertyMaxValue" data-i18n="maxValue">Max Value:</label>
+                                                    <input type="number" id="propertyMaxValue" step="any" autocomplete="off">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="parseFailureAction" data-i18n="onParseFailure">When not a number:</label>
+                                                <select id="parseFailureAction" autocomplete="off">
+                                                    <option value="remove" data-i18n="removeFeature">Remove feature</option>
+                                                    <option value="keep" data-i18n="keepFeature">Keep feature</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div id="textFilterOptions" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="textOperation" data-i18n="operation">Operation:</label>
+                                                <select id="textOperation" autocomplete="off">
+                                                    <option value="contains" data-i18n="contains">Contains</option>
+                                                    <option value="startsWith" data-i18n="startsWith">Starts with</option>
+                                                    <option value="endsWith" data-i18n="endsWith">Ends with</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="textValue" data-i18n="value">Value:</label>
+                                                <input type="text" id="textValue" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="propertyMatchAction" data-i18n="onMatch">On match:</label>
+                                                <select id="propertyMatchAction" autocomplete="off">
+                                                    <option value="keep" data-i18n="keepFeature">Keep feature</option>
+                                                    <option value="remove" data-i18n="removeFeature">Remove feature</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-filter 3: Area -->
+                                <div class="sub-filter" id="areaFilterSection">
+                                    <div class="sub-filter-header">
+                                        <h5>📐 <span data-i18n="areaFilter">Area Filter</span></h5>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="areaFilterToggle" autocomplete="off">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="sub-filter-content collapsed" id="areaFilterContent">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="minArea" data-i18n="minArea">Min Area:</label>
+                                                <input type="number" id="minArea" step="any" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="maxArea" data-i18n="maxArea">Max Area:</label>
+                                                <input type="number" id="maxArea" step="any" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <small data-i18n="areaNote">Note: Uses Area property if available, otherwise calculates geometric area.</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-filter 4: Feature Type -->
+                                <div class="sub-filter" id="typeFilterSection">
+                                    <div class="sub-filter-header">
+                                        <h5>🗺️ <span data-i18n="featureTypeFilter">Feature Type Filter</span></h5>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="typeFilterToggle" autocomplete="off">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="sub-filter-content collapsed" id="typeFilterContent">
+                                        <div class="form-group">
+                                            <label data-i18n="selectFeatureTypes">Select feature types to include:</label>
+                                        </div>
+                                        <div class="checkbox-group">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="typePoint" value="Point" checked autocomplete="off">
+                                                <span data-i18n="point">Point</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="typeMultiPoint" value="MultiPoint" checked autocomplete="off">
+                                                <span data-i18n="multiPoint">MultiPoint</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="typeLineString" value="LineString" checked autocomplete="off">
+                                                <span data-i18n="lineString">LineString</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="typeMultiLineString" value="MultiLineString" checked autocomplete="off">
+                                                <span data-i18n="multiLineString">MultiLineString</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="typePolygon" value="Polygon" checked autocomplete="off">
+                                                <span data-i18n="polygon">Polygon</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="typeMultiPolygon" value="MultiPolygon" checked autocomplete="off">
+                                                <span data-i18n="multiPolygon">MultiPolygon</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="typeGeometryCollection" value="GeometryCollection" checked autocomplete="off">
+                                                <span data-i18n="geometryCollection">GeometryCollection</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -883,6 +1292,29 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <p>Processing your GeoJSON...</p>
+    </div>
+
+    <!-- CRS Warning Modal -->
+    <div class="crs-warning-modal" id="crsWarningModal">
+        <div class="crs-warning-content">
+            <div class="crs-warning-header">
+                <div class="crs-warning-icon">⚠️</div>
+                <div class="crs-warning-title" data-i18n="crsWarningTitle"></div>
+            </div>
+            <div class="crs-warning-body">
+                <p><strong data-i18n="crsWarningMessage1"></strong></p>
+                <p data-i18n="crsWarningMessage2"></p>
+                <p data-i18n="crsWarningMessage3"></p>
+            </div>
+            <div class="crs-warning-actions">
+                <a href="https://georoots.eu/reprojector/" target="_blank" rel="noopener noreferrer" class="btn btn-success">
+                    🔧 <span data-i18n="openReprojector"></span>
+                </a>
+                <button id="crsWarningContinue" class="btn btn-secondary">
+                    <span data-i18n="continueAnyway"></span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -948,7 +1380,50 @@
                 featuresCount: " features!",
                 useFixerApp: "Invalid GeoJSON detected. Please use the GeoJSON Fixer app to validate and fix your file before using the splitter.",
                 processingMessage: "Processing your GeoJSON...",
-                downloadLatest: "Download latest version and other tools on"
+                downloadLatest: "Download latest version and other tools on",
+                // New filter-related translations
+                totalFeaturesLoaded: "Total features loaded",
+                featuresAfterFiltering: "After filtering",
+                featuresFilteredOut: "Filtered out",
+                calculating: "Calculating...",
+                locationFilter: "Location Filter",
+                filterMode: "Filter mode:",
+                anyVertex: "Any vertex in area",
+                allVertices: "All vertices in area",
+                propertyValueFilter: "Property Value Filter",
+                areaFilter: "Area Filter",
+                featureTypeFilter: "Feature Type Filter",
+                dataType: "Data type:",
+                number: "Number",
+                alphabetical: "Alphabetical",
+                minValue: "Min Value:",
+                maxValue: "Max Value:",
+                operation: "Operation:",
+                value: "Value:",
+                contains: "Contains",
+                startsWith: "Starts with",
+                endsWith: "Ends with",
+                onMatch: "On match:",
+                onParseFailure: "When not a number:",
+                removeFeature: "Remove feature",
+                keepFeature: "Keep feature",
+                minArea: "Min Area (hectares):",
+                maxArea: "Max Area (hectares):",
+                areaNote: "Note: Calculates geometric area in hectares. Uses to Area property for non-polygon features.",
+                selectFeatureTypes: "Select feature types to include:",
+                point: "Point",
+                multiPoint: "MultiPoint",
+                lineString: "LineString",
+                multiLineString: "MultiLineString",
+                polygon: "Polygon",
+                multiPolygon: "MultiPolygon",
+                geometryCollection: "GeometryCollection",
+                crsWarningTitle: "Coordinate System Warning",
+                crsWarningMessage1: "Your GeoJSON file appears to use a coordinate system other than WGS84 (EPSG:4326).",
+                crsWarningMessage2: "This tool requires coordinates in WGS84 format (latitude/longitude). Using other coordinate systems may produce incorrect results.",
+                crsWarningMessage3: "Please use our Reprojector tool to convert your file to WGS84:",
+                openReprojector: "Open Reprojector",
+                continueAnyway: "Continue Anyway"
             },
             es: {
                 title: "Herramienta de División de GeoJSON",
@@ -1010,7 +1485,50 @@
                 successfullyProcessed: "Procesado exitosamente ",
                 featuresCount: " características!",
                 useFixerApp: "GeoJSON inválido detectado. Por favor usa la aplicación GeoJSON Fixer para validar y corregir tu archivo antes de usar el divisor.",
-                processingMessage: "Procesando tu GeoJSON..."
+                processingMessage: "Procesando tu GeoJSON...",
+                // New filter-related translations
+                totalFeaturesLoaded: "Total cargadas",
+                featuresAfterFiltering: "Después del filtrado",
+                featuresFilteredOut: "Filtradas",
+                calculating: "Calculando...",
+                locationFilter: "Filtro de Ubicación",
+                filterMode: "Modo de filtrado:",
+                anyVertex: "Cualquier vértice en el área",
+                allVertices: "Todos los vértices en el área",
+                propertyValueFilter: "Filtro de Valor de Propiedad",
+                areaFilter: "Filtro de Área",
+                featureTypeFilter: "Filtro de Tipo de Característica",
+                dataType: "Tipo de datos:",
+                number: "Número",
+                alphabetical: "Alfabético",
+                minValue: "Valor Mínimo:",
+                maxValue: "Valor Máximo:",
+                operation: "Operación:",
+                value: "Valor:",
+                contains: "Contiene",
+                startsWith: "Comienza con",
+                endsWith: "Termina con",
+                onMatch: "Si coincide:",
+                onParseFailure: "Cuando no es número:",
+                removeFeature: "Eliminar característica",
+                keepFeature: "Mantener característica",
+                minArea: "Área Mínima (hectáreas):",
+                maxArea: "Área Máxima (hectáreas):",
+                areaNote: "Nota: Calcula el área geométrica en hectáreas. Usa la propiedad Área solo para características no poligonales.",
+                selectFeatureTypes: "Seleccione los tipos de características a incluir:",
+                point: "Punto",
+                multiPoint: "MultiPunto",
+                lineString: "Línea",
+                multiLineString: "MultiLínea",
+                polygon: "Polígono",
+                multiPolygon: "MultiPolígono",
+                geometryCollection: "Colección de Geometrías",
+                crsWarningTitle: "Advertencia de Sistema de Coordenadas",
+                crsWarningMessage1: "Su archivo GeoJSON parece usar un sistema de coordenadas diferente a WGS84 (EPSG:4326).",
+                crsWarningMessage2: "Esta herramienta requiere coordenadas en formato WGS84 (latitud/longitud). Usar otros sistemas de coordenadas puede producir resultados incorrectos.",
+                crsWarningMessage3: "Por favor use nuestra herramienta Reproyector para convertir su archivo a WGS84:",
+                openReprojector: "Abrir Reproyector",
+                continueAnyway: "Continuar de Todos Modos"
             },
             pt: {
                 title: "Ferramenta de Divisão de GeoJSON",
@@ -1072,7 +1590,50 @@
                 successfullyProcessed: "Processado com sucesso ",
                 featuresCount: " características!",
                 useFixerApp: "GeoJSON inválido detectado. Por favor use a aplicação GeoJSON Fixer para validar e corrigir seu arquivo antes de usar o divisor.",
-                processingMessage: "Processando seu GeoJSON..."
+                processingMessage: "Processando seu GeoJSON...",
+                // New filter-related translations
+                totalFeaturesLoaded: "Total carregadas",
+                featuresAfterFiltering: "Após filtragem",
+                featuresFilteredOut: "Filtradas",
+                calculating: "Calculando...",
+                locationFilter: "Filtro de Localização",
+                filterMode: "Modo de filtragem:",
+                anyVertex: "Qualquer vértice na área",
+                allVertices: "Todos os vértices na área",
+                propertyValueFilter: "Filtro de Valor de Propriedade",
+                areaFilter: "Filtro de Área",
+                featureTypeFilter: "Filtro de Tipo de Característica",
+                dataType: "Tipo de dados:",
+                number: "Número",
+                alphabetical: "Alfabético",
+                minValue: "Valor Mínimo:",
+                maxValue: "Valor Máximo:",
+                operation: "Operação:",
+                value: "Valor:",
+                contains: "Contém",
+                startsWith: "Começa com",
+                endsWith: "Termina com",
+                onMatch: "Se corresponder:",
+                onParseFailure: "Quando não é número:",
+                removeFeature: "Remover característica",
+                keepFeature: "Manter característica",
+                minArea: "Área Mínima (hectares):",
+                maxArea: "Área Máxima (hectares):",
+                areaNote: "Nota: Calcula a área geométrica em hectares. Usa a propriedade Área apenas para características não poligonais.",
+                selectFeatureTypes: "Selecione os tipos de características a incluir:",
+                point: "Ponto",
+                multiPoint: "MultiPonto",
+                lineString: "Linha",
+                multiLineString: "MultiLinha",
+                polygon: "Polígono",
+                multiPolygon: "MultiPolígono",
+                geometryCollection: "Coleção de Geometrias",
+                crsWarningTitle: "Aviso de Sistema de Coordenadas",
+                crsWarningMessage1: "Seu arquivo GeoJSON parece usar um sistema de coordenadas diferente de WGS84 (EPSG:4326).",
+                crsWarningMessage2: "Esta ferramenta requer coordenadas em formato WGS84 (latitude/longitude). Usar outros sistemas de coordenadas pode produzir resultados incorretos.",
+                crsWarningMessage3: "Por favor use nossa ferramenta Reprojetor para converter seu arquivo para WGS84:",
+                openReprojector: "Abrir Reprojetor",
+                continueAnyway: "Continuar Mesmo Assim"
             }
         };
 
@@ -1083,12 +1644,18 @@
                 let currentFileName = '';
                 let eventListeners = new Map();
                 let currentLanguage = 'en';
+                let areaCache = new Map();
+                let previewTimeout = null;
+                let previewAbortFlag = false;
                 
                 this.rawData = rawData;
                 this.features = features;
                 this.currentFileName = currentFileName;
                 this.eventListeners = eventListeners;
                 this.currentLanguage = currentLanguage;
+                this.areaCache = areaCache;
+                this.previewTimeout = previewTimeout;
+                this.previewAbortFlag = previewAbortFlag;
                 
                 this.initializeEventListeners();
                 this.initializeLanguage();
@@ -1119,6 +1686,27 @@
                 this.addEventListener(document.getElementById('sortToggle'), 'change', this.handleSortToggle.bind(this));
                 this.addEventListener(document.getElementById('filterToggle'), 'change', this.handleFilterToggle.bind(this));
                 this.addEventListener(document.getElementById('splitToggle'), 'change', this.handleSplitToggle.bind(this));
+
+                // Toggle switches for sub-filters
+                this.addEventListener(document.getElementById('locationFilterToggle'), 'change', this.handleLocationFilterToggle.bind(this));
+                this.addEventListener(document.getElementById('propertyFilterToggle'), 'change', this.handlePropertyFilterToggle.bind(this));
+                this.addEventListener(document.getElementById('areaFilterToggle'), 'change', this.handleAreaFilterToggle.bind(this));
+                this.addEventListener(document.getElementById('typeFilterToggle'), 'change', this.handleTypeFilterToggle.bind(this));
+
+                // Property data type change handler
+                this.addEventListener(document.getElementById('propertyDataType'), 'change', this.handlePropertyDataTypeChange.bind(this));
+
+                // Paste handlers for coordinate fields
+                this.setupCoordinatePasteHandlers();
+
+                // Filter input change handlers for real-time preview
+                this.setupFilterPreviewListeners();
+
+                // CRS warning modal continue button
+                this.addEventListener(document.getElementById('crsWarningContinue'), 'click', this.closeCRSWarning.bind(this));
+
+                // Setup coordinate input validation
+                this.setupCoordinateValidation();
             }
 
             addEventListener(element, event, handler) {
@@ -1201,9 +1789,15 @@
                 if (isChecked) {
                     content.classList.remove('collapsed');
                     section.classList.remove('disabled');
+                    // Trigger preview calculation
+                    this.triggerFilterPreview();
                 } else {
                     content.classList.add('collapsed');
                     section.classList.add('disabled');
+                    // Reset to show all features passing
+                    if (this.features.length > 0) {
+                        this.initializeFilterPreview(this.features.length);
+                    }
                 }
             }
 
@@ -1219,6 +1813,81 @@
                     content.classList.add('collapsed');
                     section.classList.add('disabled');
                 }
+            }
+
+            handleLocationFilterToggle(event) {
+                const isChecked = event.target.checked;
+                const content = document.getElementById('locationFilterContent');
+                const section = document.getElementById('locationFilterSection');
+                
+                if (isChecked) {
+                    content.classList.remove('collapsed');
+                    section.classList.remove('disabled');
+                } else {
+                    content.classList.add('collapsed');
+                    section.classList.add('disabled');
+                }
+                this.triggerFilterPreview();
+            }
+
+            handlePropertyFilterToggle(event) {
+                const isChecked = event.target.checked;
+                const content = document.getElementById('propertyFilterContent');
+                const section = document.getElementById('propertyFilterSection');
+                
+                if (isChecked) {
+                    content.classList.remove('collapsed');
+                    section.classList.remove('disabled');
+                } else {
+                    content.classList.add('collapsed');
+                    section.classList.add('disabled');
+                }
+                this.triggerFilterPreview();
+            }
+
+            handleAreaFilterToggle(event) {
+                const isChecked = event.target.checked;
+                const content = document.getElementById('areaFilterContent');
+                const section = document.getElementById('areaFilterSection');
+                
+                if (isChecked) {
+                    content.classList.remove('collapsed');
+                    section.classList.remove('disabled');
+                } else {
+                    content.classList.add('collapsed');
+                    section.classList.add('disabled');
+                }
+                this.triggerFilterPreview();
+            }
+
+            handleTypeFilterToggle(event) {
+                const isChecked = event.target.checked;
+                const content = document.getElementById('typeFilterContent');
+                const section = document.getElementById('typeFilterSection');
+                
+                if (isChecked) {
+                    content.classList.remove('collapsed');
+                    section.classList.remove('disabled');
+                } else {
+                    content.classList.add('collapsed');
+                    section.classList.add('disabled');
+                }
+                this.triggerFilterPreview();
+            }
+
+            handlePropertyDataTypeChange() {
+                const dataType = document.getElementById('propertyDataType').value;
+                const numberOptions = document.getElementById('numberFilterOptions');
+                const textOptions = document.getElementById('textFilterOptions');
+                
+                if (dataType === 'number') {
+                    numberOptions.style.display = 'block';
+                    textOptions.style.display = 'none';
+                } else {
+                    numberOptions.style.display = 'none';
+                    textOptions.style.display = 'block';
+                }
+                this.triggerFilterPreview();
             }
 
             handleDragOver(e) {
@@ -1249,7 +1918,7 @@
 
             async loadFile(file) {
                 try {
-                    const maxSize = 100 * 1024 * 1024; // 100MB
+                    const maxSize = 1000 * 1024 * 1024; // 100MB
                     if (file.size > maxSize) {
                         this.showError(this.getTranslation('fileTooLarge'));
                         return;
@@ -1285,6 +1954,15 @@
                         return false;
                     }
                     
+                    // Check CRS and coordinate validity
+                    const crsCheck = this.checkCRS(parsed);
+                    if (!crsCheck.isValid) {
+                        this.showCRSWarning();
+                        // Store data but don't process yet
+                        this.rawData = parsed;
+                        return false;
+                    }
+                    
                     this.rawData = parsed;
                     this.clearErrors();
                     this.showSuccess(this.getTranslation('jsonValid'));
@@ -1294,6 +1972,52 @@
                 } catch (error) {
                     this.showError(this.getTranslation('useFixerApp'));
                     return false;
+                }
+            }
+
+            checkCRS(data) {
+                // Check if CRS is specified and is not WGS84
+                if (data.crs) {
+                    const crsName = data.crs.properties?.name || '';
+                    const isWGS84 = crsName.includes('4326') || 
+                                   crsName.includes('WGS84') || 
+                                   crsName.includes('WGS 84') ||
+                                   crsName.includes('CRS84');
+                    
+                    if (!isWGS84) {
+                        console.warn('[CRS Check] Non-WGS84 CRS detected:', crsName);
+                        return { isValid: false, reason: 'crs_specified' };
+                    }
+                }
+                
+                // Check if coordinates are within valid WGS84 range
+                const features = this.extractFeatures(data);
+                for (const feature of features.slice(0, Math.min(100, features.length))) {
+                    const vertices = this.getFeatureVertices(feature);
+                    for (const vertex of vertices) {
+                        if (vertex.lat < -90 || vertex.lat > 90 || 
+                            vertex.lng < -180 || vertex.lng > 180) {
+                            console.warn('[CRS Check] Coordinates outside WGS84 range:', vertex);
+                            return { isValid: false, reason: 'coordinates_out_of_range' };
+                        }
+                    }
+                }
+                
+                return { isValid: true };
+            }
+
+            showCRSWarning() {
+                document.getElementById('crsWarningModal').classList.add('show');
+            }
+
+            closeCRSWarning() {
+                document.getElementById('crsWarningModal').classList.remove('show');
+                // Continue processing despite CRS warning
+                if (this.rawData) {
+                    this.clearErrors();
+                    this.showSuccess(this.getTranslation('jsonValid'));
+                    this.analyzeData();
+                    this.showProcessingOptions();
                 }
             }
 
@@ -1352,12 +2076,19 @@
                 // Calculate duplicate geometries
                 const duplicateCount = this.calculateDuplicateGeometries();
                 
-                // Calculate total area
+                // Calculate total area (initial - may be N/A, will update after cache completes)
                 const totalArea = this.calculateTotalArea();
 
                 this.updateStats(featureCount, polygonCount, multiPolygonCount, pointCount, duplicateCount, totalArea);
                 this.setupPropertySelect(Array.from(properties));
+                this.setupFilterPropertySelect(Array.from(properties));
                 document.getElementById('fileStats').classList.remove('hidden');
+                
+                // Show and initialize preview panel
+                this.initializeFilterPreview(featureCount);
+                
+                // Start background area calculation (will update total area when complete)
+                this.calculateAndCacheAreas();
             }
 
             updateStats(features, polygons, multiPolygons, points, duplicates, totalArea) {
@@ -1389,23 +2120,52 @@
 
             calculateTotalArea() {
                 let totalArea = 0;
-                let hasAreaProperty = false;
+                let hasArea = false;
 
-                this.features.forEach(feature => {
-                    if (feature.properties && feature.properties.Area) {
-                        const areaValue = parseFloat(feature.properties.Area);
-                        if (!isNaN(areaValue)) {
-                            totalArea += areaValue;
-                            hasAreaProperty = true;
+                // If area cache is available and populated, use it
+                if (this.areaCache && this.areaCache.size > 0) {
+                    this.areaCache.forEach(area => {
+                        if (area > 0) {
+                            totalArea += area;
+                            hasArea = true;
                         }
-                    }
-                });
+                    });
+                } else {
+                    // Otherwise, just check Area property
+                    this.features.forEach(feature => {
+                        if (feature.properties && feature.properties.Area) {
+                            const areaValue = parseFloat(feature.properties.Area);
+                            if (!isNaN(areaValue)) {
+                                totalArea += areaValue;
+                                hasArea = true;
+                            }
+                        }
+                    });
+                }
 
-                return hasAreaProperty ? totalArea.toFixed(2) : 'N/A';
+                return hasArea ? totalArea.toFixed(2) + ' ha' : 'N/A';
+            }
+
+            updateTotalAreaDisplay() {
+                // Update the total area display after area cache is populated
+                const totalArea = this.calculateTotalArea();
+                document.getElementById('totalArea').textContent = totalArea;
             }
 
             setupPropertySelect(existingProperties) {
                 const propertySelect = document.getElementById('propertySelect');
+                propertySelect.innerHTML = '<option value="">Select a property...</option>';
+                
+                existingProperties.forEach(prop => {
+                    const option = document.createElement('option');
+                    option.value = prop;
+                    option.textContent = prop;
+                    propertySelect.appendChild(option);
+                });
+            }
+
+            setupFilterPropertySelect(existingProperties) {
+                const propertySelect = document.getElementById('filterPropertySelect');
                 propertySelect.innerHTML = '<option value="">Select a property...</option>';
                 
                 existingProperties.forEach(prop => {
@@ -1423,7 +2183,7 @@
                     return data.features || [];
                 } else if (data.type === 'Feature') {
                     return [data];
-                } else if (data.type && ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon'].includes(data.type)) {
+                } else if (data.type && ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'GeometryCollection'].includes(data.type)) {
                     return [{
                         type: 'Feature',
                         geometry: data,
@@ -1436,6 +2196,423 @@
                 }
 
                 return features;
+            }
+
+            async calculateAndCacheAreas() {
+                // Process in chunks to avoid blocking
+                const chunkSize = 2000;
+                let processed = 0;
+                let calculatedCount = 0;
+                let fromPropertyCount = 0;
+                const startTime = Date.now();
+                
+                console.log(`[Area Cache] Starting area calculation for ${this.features.length} features...`);
+                
+                const processChunk = () => {
+                    const end = Math.min(processed + chunkSize, this.features.length);
+                    
+                    for (let i = processed; i < end; i++) {
+                        const feature = this.features[i];
+                        let area = 0;
+                        
+                        // Priority 1: Try to calculate geometric area (most accurate)
+                        if (feature.geometry) {
+                            const geomType = feature.geometry.type;
+                            if (geomType === 'Polygon' || geomType === 'MultiPolygon') {
+                                area = this.calculateGeometricArea(feature);
+                                if (area > 0) {
+                                    calculatedCount++;
+                                }
+                            }
+                        }
+                        
+                        // Priority 2: Fall back to Area property if geometric calculation failed or wasn't possible
+                        if (area === 0 && feature.properties && feature.properties.Area) {
+                            const areaValue = parseFloat(feature.properties.Area);
+                            if (!isNaN(areaValue)) {
+                                area = areaValue;
+                                fromPropertyCount++;
+                            }
+                        }
+                        
+                        this.areaCache.set(i, area);
+                    }
+                    
+                    processed = end;
+                    const progress = ((processed / this.features.length) * 100).toFixed(1);
+                    console.log(`[Area Cache] Progress: ${processed}/${this.features.length} (${progress}%) - Calculated: ${calculatedCount}, From property: ${fromPropertyCount}`);
+                    
+                    if (processed < this.features.length) {
+                        setTimeout(processChunk, 0);
+                    } else {
+                        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+                        console.log(`[Area Cache] ✓ Completed in ${duration}s - Total: ${this.features.length} features`);
+                        console.log(`[Area Cache]   - Calculated geometrically: ${calculatedCount}`);
+                        console.log(`[Area Cache]   - From Area property (fallback): ${fromPropertyCount}`);
+                        console.log(`[Area Cache]   - No area (points/lines): ${this.features.length - fromPropertyCount - calculatedCount}`);
+                        
+                        // Update the total area display now that cache is complete
+                        this.updateTotalAreaDisplay();
+                    }
+                };
+                
+                processChunk();
+            }
+
+            calculateGeometricArea(feature) {
+                if (!feature.geometry) return 0;
+                
+                try {
+                    const type = feature.geometry.type;
+                    if (type === 'Polygon') {
+                        return this.calculatePolygonArea(feature.geometry.coordinates);
+                    } else if (type === 'MultiPolygon') {
+                        let totalArea = 0;
+                        feature.geometry.coordinates.forEach(polygon => {
+                            totalArea += this.calculatePolygonArea(polygon);
+                        });
+                        return totalArea;
+                    } else if (type === 'GeometryCollection') {
+                        // Handle GeometryCollection by summing areas of all polygon geometries
+                        let totalArea = 0;
+                        if (feature.geometry.geometries) {
+                            feature.geometry.geometries.forEach(geom => {
+                                const tempFeature = { geometry: geom };
+                                totalArea += this.calculateGeometricArea(tempFeature);
+                            });
+                        }
+                        return totalArea;
+                    }
+                    
+                    return 0;
+                } catch (error) {
+                    console.warn('[Area Calculation] Failed for feature:', error);
+                    return 0;
+                }
+            }
+
+            calculatePolygonArea(coordinates) {
+                // Calculate geographic area using spherical geometry
+                // Returns area in hectares (1 hectare = 10,000 square meters)
+                try {
+                    if (!coordinates || !coordinates[0] || coordinates[0].length < 3) return 0;
+                    
+                    const ring = coordinates[0]; // Outer ring
+                    let area = 0;
+                    
+                    // Use the spherical excess formula for geographic coordinates
+                    const EARTH_RADIUS = 6378137; // Earth's radius in meters
+                    
+                    for (let i = 0; i < ring.length - 1; i++) {
+                        const coord1 = ring[i];
+                        const coord2 = ring[i + 1];
+                        
+                        // Validate coordinate pairs
+                        if (!coord1 || !coord2 || coord1.length < 2 || coord2.length < 2) continue;
+                        
+                        const [lon1, lat1] = coord1;
+                        const [lon2, lat2] = coord2;
+                        
+                        // Validate numbers
+                        if (isNaN(lon1) || isNaN(lat1) || isNaN(lon2) || isNaN(lat2)) continue;
+                        
+                        // Convert to radians
+                        const lat1Rad = this.toRadians(lat1);
+                        const lat2Rad = this.toRadians(lat2);
+                        const lon1Rad = this.toRadians(lon1);
+                        const lon2Rad = this.toRadians(lon2);
+                        
+                        // Calculate area contribution of this segment
+                        area += (lon2Rad - lon1Rad) * (2 + Math.sin(lat1Rad) + Math.sin(lat2Rad));
+                    }
+                    
+                    // Complete the calculation (in square meters)
+                    area = Math.abs(area * EARTH_RADIUS * EARTH_RADIUS / 2);
+                    
+                    // Subtract hole areas if present
+                    if (coordinates.length > 1) {
+                        for (let h = 1; h < coordinates.length; h++) {
+                            const hole = coordinates[h];
+                            if (!hole || hole.length < 3) continue;
+                            
+                            let holeArea = 0;
+                            
+                            for (let i = 0; i < hole.length - 1; i++) {
+                                const coord1 = hole[i];
+                                const coord2 = hole[i + 1];
+                                
+                                if (!coord1 || !coord2 || coord1.length < 2 || coord2.length < 2) continue;
+                                
+                                const [lon1, lat1] = coord1;
+                                const [lon2, lat2] = coord2;
+                                
+                                if (isNaN(lon1) || isNaN(lat1) || isNaN(lon2) || isNaN(lat2)) continue;
+                                
+                                const lat1Rad = this.toRadians(lat1);
+                                const lat2Rad = this.toRadians(lat2);
+                                const lon1Rad = this.toRadians(lon1);
+                                const lon2Rad = this.toRadians(lon2);
+                                
+                                holeArea += (lon2Rad - lon1Rad) * (2 + Math.sin(lat1Rad) + Math.sin(lat2Rad));
+                            }
+                            
+                            area -= Math.abs(holeArea * EARTH_RADIUS * EARTH_RADIUS / 2);
+                        }
+                    }
+                    
+                    // Convert from square meters to hectares
+                    return area / 10000;
+                } catch (error) {
+                    console.warn('[Area Calculation] calculatePolygonArea failed:', error);
+                    return 0;
+                }
+            }
+
+            setupCoordinatePasteHandlers() {
+                // Add paste handlers to coordinate input fields
+                const coordinateFields = [
+                    { id: 'minLat', isLat: true, pair: 'minLng' },
+                    { id: 'maxLat', isLat: true, pair: 'maxLng' },
+                    { id: 'minLng', isLat: false, pair: 'minLat' },
+                    { id: 'maxLng', isLat: false, pair: 'maxLat' },
+                    { id: 'centerLat', isLat: true, pair: 'centerLng' },
+                    { id: 'centerLng', isLat: false, pair: 'centerLat' }
+                ];
+
+                coordinateFields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (element) {
+                        this.addEventListener(element, 'paste', (e) => {
+                            this.handleCoordinatePaste(e, field);
+                        });
+                    }
+                });
+            }
+
+            setupCoordinateValidation() {
+                // Add validation to coordinate input fields
+                const latFields = ['minLat', 'maxLat', 'centerLat'];
+                const lngFields = ['minLng', 'maxLng', 'centerLng'];
+                
+                latFields.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        this.addEventListener(element, 'blur', () => {
+                            this.validateCoordinateInput(element, 'lat');
+                        });
+                    }
+                });
+                
+                lngFields.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        this.addEventListener(element, 'blur', () => {
+                            this.validateCoordinateInput(element, 'lng');
+                        });
+                    }
+                });
+                
+                // Add validation for distance (must be positive)
+                const distanceField = document.getElementById('distanceFromPoint');
+                if (distanceField) {
+                    this.addEventListener(distanceField, 'blur', () => {
+                        const value = parseFloat(distanceField.value);
+                        if (distanceField.value && !isNaN(value) && value < 0) {
+                            distanceField.value = Math.abs(value);
+                        }
+                    });
+                }
+                
+                // Add validation for area fields (must be non-negative)
+                ['minArea', 'maxArea'].forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        this.addEventListener(element, 'blur', () => {
+                            const value = parseFloat(element.value);
+                            if (element.value && !isNaN(value) && value < 0) {
+                                element.value = 0;
+                            }
+                        });
+                    }
+                });
+                
+                // Add validation for chunk size (must be positive integer)
+                const chunkSizeField = document.getElementById('chunkSize');
+                if (chunkSizeField) {
+                    this.addEventListener(chunkSizeField, 'blur', () => {
+                        const value = parseInt(chunkSizeField.value);
+                        if (!isNaN(value)) {
+                            if (value < 1) chunkSizeField.value = 1;
+                            if (value > 10000) chunkSizeField.value = 10000;
+                        }
+                    });
+                }
+            }
+
+            validateCoordinateInput(element, type) {
+                const value = parseFloat(element.value);
+                if (element.value && !isNaN(value)) {
+                    if (type === 'lat' && (value < -90 || value > 90)) {
+                        element.value = Math.max(-90, Math.min(90, value));
+                    } else if (type === 'lng' && (value < -180 || value > 180)) {
+                        element.value = Math.max(-180, Math.min(180, value));
+                    }
+                }
+            }
+
+            handleCoordinatePaste(event, fieldInfo) {
+                // Get pasted data
+                const pastedData = (event.clipboardData || window.clipboardData).getData('text');
+                
+                // Try to parse as coordinate pair (lat, lng or lng, lat)
+                // Common formats: "12.456, -3.154", "12.456,-3.154", "12.456 -3.154"
+                const coordPattern = /^\s*(-?\d+\.?\d*)\s*[,\s]+\s*(-?\d+\.?\d*)\s*$/;
+                const match = pastedData.match(coordPattern);
+                
+                if (match) {
+                    event.preventDefault(); // Prevent default paste
+                    
+                    const num1 = parseFloat(match[1]);
+                    const num2 = parseFloat(match[2]);
+                    
+                    // Determine which is lat and which is lng
+                    // Latitude is typically between -90 and 90
+                    // Longitude is typically between -180 and 180
+                    let lat, lng;
+                    
+                    // Check if either number is clearly out of latitude range
+                    if (Math.abs(num1) > 90 && Math.abs(num2) <= 90) {
+                        // num1 is longitude, num2 is latitude
+                        lng = num1;
+                        lat = num2;
+                    } else if (Math.abs(num2) > 90 && Math.abs(num1) <= 90) {
+                        // num2 is longitude, num1 is latitude
+                        lat = num1;
+                        lng = num2;
+                    } else {
+                        // Both could be either, assume standard format: lat, lng
+                        lat = num1;
+                        lng = num2;
+                    }
+                    
+                    // Populate both fields
+                    const currentField = document.getElementById(fieldInfo.id);
+                    const pairField = document.getElementById(fieldInfo.pair);
+                    
+                    if (fieldInfo.isLat) {
+                        currentField.value = lat;
+                        if (pairField) pairField.value = lng;
+                    } else {
+                        currentField.value = lng;
+                        if (pairField) pairField.value = lat;
+                    }
+                    
+                    // Trigger preview update
+                    this.triggerFilterPreview();
+                }
+                // If no match, allow normal paste behavior
+            }
+
+            setupFilterPreviewListeners() {
+                // Add listeners to all filter inputs for real-time preview
+                const filterInputIds = [
+                    'locationFilterMode', 'minLat', 'maxLat', 'minLng', 'maxLng', 
+                    'centerLat', 'centerLng', 'distanceFromPoint',
+                    'filterPropertySelect', 'propertyDataType', 
+                    'propertyMinValue', 'propertyMaxValue', 'parseFailureAction',
+                    'textOperation', 'textValue', 'propertyMatchAction',
+                    'minArea', 'maxArea',
+                    'typePoint', 'typeMultiPoint', 'typeLineString', 
+                    'typeMultiLineString', 'typePolygon', 'typeMultiPolygon', 'typeGeometryCollection'
+                ];
+                
+                filterInputIds.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        const eventType = element.type === 'checkbox' ? 'change' : 'input';
+                        this.addEventListener(element, eventType, () => this.triggerFilterPreview());
+                    }
+                });
+            }
+
+            initializeFilterPreview(totalFeatures) {
+                // Show the preview panel
+                document.getElementById('filterPreviewPanel').style.display = 'block';
+                
+                // Initialize with all features passing (no filters active)
+                this.updateFilterPreview(totalFeatures, totalFeatures);
+            }
+
+            triggerFilterPreview() {
+                // Only trigger preview if filter section is enabled
+                if (!document.getElementById('filterToggle').checked) {
+                    // If filter is disabled, show all features passing
+                    this.initializeFilterPreview(this.features.length);
+                    return;
+                }
+                
+                // Clear existing timeout
+                if (this.previewTimeout) {
+                    clearTimeout(this.previewTimeout);
+                }
+                
+                // Set abort flag for any running preview calculation
+                this.previewAbortFlag = true;
+                
+                // Debounce by 300ms
+                this.previewTimeout = setTimeout(() => {
+                    this.calculateFilterPreview();
+                }, 300);
+            }
+
+            async calculateFilterPreview() {
+                // Show loading spinner
+                document.getElementById('filterPreviewPanel').style.display = 'block';
+                document.getElementById('previewLoading').style.display = 'flex';
+                
+                this.previewAbortFlag = false;
+                const totalFeatures = this.features.length;
+                let passedCount = 0;
+                
+                // Process in chunks to avoid blocking
+                const chunkSize = 1000;
+                let processed = 0;
+                
+                const processChunk = () => {
+                    if (this.previewAbortFlag) {
+                        return; // Abort if new preview was triggered
+                    }
+                    
+                    const end = Math.min(processed + chunkSize, totalFeatures);
+                    
+                    for (let i = processed; i < end; i++) {
+                        if (this.passesAllFilters(this.features[i], i)) {
+                            passedCount++;
+                        }
+                    }
+                    
+                    processed = end;
+                    
+                    if (processed < totalFeatures) {
+                        setTimeout(processChunk, 0);
+                    } else {
+                        // Update preview display
+                        this.updateFilterPreview(totalFeatures, passedCount);
+                    }
+                };
+                
+                processChunk();
+            }
+
+            updateFilterPreview(total, passed) {
+                const filtered = total - passed;
+                const passedPercent = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
+                const filteredPercent = total > 0 ? ((filtered / total) * 100).toFixed(1) : 0;
+                
+                document.getElementById('previewTotalFeatures').textContent = total;
+                document.getElementById('previewPassedFeatures').textContent = `${passed} (${passedPercent}%)`;
+                document.getElementById('previewFilteredFeatures').textContent = `${filtered} (${filteredPercent}%)`;
+                document.getElementById('previewLoading').style.display = 'none';
             }
 
             async processGeoJSON() {
@@ -1477,6 +2654,7 @@
                         };
                         this.downloadSplitFiles([singleResult]);
                     }
+                    this.updateProgress(100);
                     this.showSuccess(this.getTranslation('successfullyProcessed') + features.length + this.getTranslation('featuresCount'));
                     
                 } catch (error) {
@@ -1486,38 +2664,271 @@
                 }
             }
 
-            filterFeatures(features) {
-                const minLat = parseFloat(document.getElementById('minLat').value);
-                const maxLat = parseFloat(document.getElementById('maxLat').value);
-                const minLng = parseFloat(document.getElementById('minLng').value);
-                const maxLng = parseFloat(document.getElementById('maxLng').value);
+            passesAllFilters(feature, featureIndex) {
+                // Check location filter (if enabled)
+                if (document.getElementById('locationFilterToggle').checked) {
+                    if (!this.passesLocationFilter(feature)) {
+                        return false;
+                    }
+                }
+                
+                // Check property value filter (if enabled)
+                if (document.getElementById('propertyFilterToggle').checked) {
+                    if (!this.passesPropertyFilter(feature)) {
+                        return false;
+                    }
+                }
+                
+                // Check area filter (if enabled)
+                if (document.getElementById('areaFilterToggle').checked) {
+                    if (!this.passesAreaFilter(feature, featureIndex)) {
+                        return false;
+                    }
+                }
+                
+                // Check feature type filter (if enabled)
+                if (document.getElementById('typeFilterToggle').checked) {
+                    if (!this.passesTypeFilter(feature)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+
+            passesLocationFilter(feature) {
+                let minLat = parseFloat(document.getElementById('minLat').value);
+                let maxLat = parseFloat(document.getElementById('maxLat').value);
+                let minLng = parseFloat(document.getElementById('minLng').value);
+                let maxLng = parseFloat(document.getElementById('maxLng').value);
                 const distanceFromPoint = parseFloat(document.getElementById('distanceFromPoint').value);
                 const centerLat = parseFloat(document.getElementById('centerLat').value);
                 const centerLng = parseFloat(document.getElementById('centerLng').value);
+                const filterMode = document.getElementById('locationFilterMode').value;
 
-                // If no filter is applied, return all features
-                if (!minLat && !maxLat && !minLng && !maxLng && !distanceFromPoint) {
-                    return features;
+                // Auto-swap min/max if they're in wrong order (user-friendly)
+                if (!isNaN(minLat) && !isNaN(maxLat) && minLat > maxLat) {
+                    [minLat, maxLat] = [maxLat, minLat];
+                }
+                if (!isNaN(minLng) && !isNaN(maxLng) && minLng > maxLng) {
+                    [minLng, maxLng] = [maxLng, minLng];
                 }
 
-                return features.filter(feature => {
-                    if (distanceFromPoint && !isNaN(centerLat) && !isNaN(centerLng)) {
-                        // Filter by distance from point
-                        const center = this.getFeatureCenter(feature);
-                        const distance = this.calculateDistance(centerLat, centerLng, center.lat, center.lng);
-                        return distance <= distanceFromPoint;
+                // If no location filter is set, pass
+                if (isNaN(minLat) && isNaN(maxLat) && isNaN(minLng) && isNaN(maxLng) && isNaN(distanceFromPoint)) {
+                    return true;
+                }
+
+                // Get all vertices from the feature
+                const vertices = this.getFeatureVertices(feature);
+                if (vertices.length === 0) return false;
+
+                if (!isNaN(distanceFromPoint) && !isNaN(centerLat) && !isNaN(centerLng)) {
+                    // Filter by distance from point
+                    if (filterMode === 'all') {
+                        // All vertices must be within distance
+                        return vertices.every(vertex => {
+                            const distance = this.calculateDistance(centerLat, centerLng, vertex.lat, vertex.lng);
+                            return distance <= distanceFromPoint;
+                        });
                     } else {
-                        // Filter by bounding box
-                        const center = this.getFeatureCenter(feature);
-                        
-                        if (!isNaN(minLat) && center.lat < minLat) return false;
-                        if (!isNaN(maxLat) && center.lat > maxLat) return false;
-                        if (!isNaN(minLng) && center.lng < minLng) return false;
-                        if (!isNaN(maxLng) && center.lng > maxLng) return false;
-                        
+                        // At least one vertex must be within distance
+                        return vertices.some(vertex => {
+                            const distance = this.calculateDistance(centerLat, centerLng, vertex.lat, vertex.lng);
+                            return distance <= distanceFromPoint;
+                        });
+                    }
+                } else {
+                    // Filter by bounding box
+                    if (filterMode === 'all') {
+                        // All vertices must be within bounding box
+                        return vertices.every(vertex => {
+                            if (!isNaN(minLat) && vertex.lat < minLat) return false;
+                            if (!isNaN(maxLat) && vertex.lat > maxLat) return false;
+                            if (!isNaN(minLng) && vertex.lng < minLng) return false;
+                            if (!isNaN(maxLng) && vertex.lng > maxLng) return false;
+                            return true;
+                        });
+                    } else {
+                        // At least one vertex must be within bounding box
+                        return vertices.some(vertex => {
+                            if (!isNaN(minLat) && vertex.lat < minLat) return false;
+                            if (!isNaN(maxLat) && vertex.lat > maxLat) return false;
+                            if (!isNaN(minLng) && vertex.lng < minLng) return false;
+                            if (!isNaN(maxLng) && vertex.lng > maxLng) return false;
+                            return true;
+                        });
+                    }
+                }
+            }
+
+            getFeatureVertices(feature) {
+                // Extract all vertices from a feature's geometry
+                const vertices = [];
+                
+                if (!feature.geometry) {
+                    return vertices;
+                }
+                
+                // Handle GeometryCollection
+                if (feature.geometry.type === 'GeometryCollection') {
+                    if (feature.geometry.geometries) {
+                        feature.geometry.geometries.forEach(geom => {
+                            const tempFeature = { geometry: geom };
+                            vertices.push(...this.getFeatureVertices(tempFeature));
+                        });
+                    }
+                    return vertices;
+                }
+                
+                if (!feature.geometry.coordinates) {
+                    return vertices;
+                }
+                
+                const extractCoordinates = (coords, depth) => {
+                    if (depth === 0) {
+                        // This is a coordinate pair [lng, lat]
+                        vertices.push({ lng: coords[0], lat: coords[1] });
+                    } else {
+                        // This is an array of coordinates
+                        coords.forEach(item => extractCoordinates(item, depth - 1));
+                    }
+                };
+                
+                const type = feature.geometry.type;
+                switch (type) {
+                    case 'Point':
+                        extractCoordinates(feature.geometry.coordinates, 0);
+                        break;
+                    case 'LineString':
+                    case 'MultiPoint':
+                        extractCoordinates(feature.geometry.coordinates, 1);
+                        break;
+                    case 'Polygon':
+                    case 'MultiLineString':
+                        extractCoordinates(feature.geometry.coordinates, 2);
+                        break;
+                    case 'MultiPolygon':
+                        extractCoordinates(feature.geometry.coordinates, 3);
+                        break;
+                }
+                
+                return vertices;
+            }
+
+            passesPropertyFilter(feature) {
+                const propertyName = document.getElementById('filterPropertySelect').value;
+                const dataType = document.getElementById('propertyDataType').value;
+                
+                // If no property selected, pass
+                if (!propertyName) {
+                    return true;
+                }
+                
+                const propertyValue = feature.properties?.[propertyName];
+                
+                if (dataType === 'number') {
+                    const minValue = parseFloat(document.getElementById('propertyMinValue').value);
+                    const maxValue = parseFloat(document.getElementById('propertyMaxValue').value);
+                    const parseFailureAction = document.getElementById('parseFailureAction').value;
+                    
+                    const numValue = parseFloat(propertyValue);
+                    
+                    // Handle parse failure
+                    if (isNaN(numValue)) {
+                        return parseFailureAction === 'keep';
+                    }
+                    
+                    // Check if number is in range
+                    if (!isNaN(minValue) && numValue < minValue) return false;
+                    if (!isNaN(maxValue) && numValue > maxValue) return false;
+                    
+                    return true;
+                } else {
+                    // Text filtering
+                    const operation = document.getElementById('textOperation').value;
+                    const textValue = document.getElementById('textValue').value;
+                    const matchAction = document.getElementById('propertyMatchAction').value;
+                    
+                    // If no text value to filter, pass
+                    if (!textValue) {
                         return true;
                     }
+                    
+                    const strValue = String(propertyValue || '').toLowerCase();
+                    const searchText = textValue.toLowerCase();
+                    let matches = false;
+                    
+                    switch (operation) {
+                        case 'contains':
+                            matches = strValue.includes(searchText);
+                            break;
+                        case 'startsWith':
+                            matches = strValue.startsWith(searchText);
+                            break;
+                        case 'endsWith':
+                            matches = strValue.endsWith(searchText);
+                            break;
+                        default:
+                            matches = true;
+                    }
+                    
+                    // Apply match action
+                    return matchAction === 'keep' ? matches : !matches;
+                }
+            }
+
+            passesAreaFilter(feature, featureIndex) {
+                const minArea = parseFloat(document.getElementById('minArea').value);
+                const maxArea = parseFloat(document.getElementById('maxArea').value);
+                
+                // If no area filter is set, pass
+                if (isNaN(minArea) && isNaN(maxArea)) {
+                    return true;
+                }
+                
+                // Get area from cache
+                const area = this.areaCache.get(featureIndex) || 0;
+                
+                if (!isNaN(minArea) && area < minArea) return false;
+                if (!isNaN(maxArea) && area > maxArea) return false;
+                
+                return true;
+            }
+
+            passesTypeFilter(feature) {
+                if (!feature.geometry) return false;
+                
+                const featureType = feature.geometry.type;
+                
+                // Get all checked types
+                const checkedTypes = [];
+                const typeCheckboxes = [
+                    { id: 'typePoint', value: 'Point' },
+                    { id: 'typeMultiPoint', value: 'MultiPoint' },
+                    { id: 'typeLineString', value: 'LineString' },
+                    { id: 'typeMultiLineString', value: 'MultiLineString' },
+                    { id: 'typePolygon', value: 'Polygon' },
+                    { id: 'typeMultiPolygon', value: 'MultiPolygon' },
+                    { id: 'typeGeometryCollection', value: 'GeometryCollection' }
+                ];
+                
+                typeCheckboxes.forEach(checkbox => {
+                    if (document.getElementById(checkbox.id).checked) {
+                        checkedTypes.push(checkbox.value);
+                    }
                 });
+                
+                // If no types are checked, pass all
+                if (checkedTypes.length === 0) {
+                    return true;
+                }
+                
+                return checkedTypes.includes(featureType);
+            }
+
+            filterFeatures(features) {
+                return features.filter((feature, index) => this.passesAllFilters(feature, index));
             }
 
             splitFeatures(features) {
@@ -1583,23 +2994,57 @@
             }
 
             getFeatureCenter(feature) {
-                if (!feature.geometry || !feature.geometry.coordinates) {
+                if (!feature.geometry) {
+                    return { lat: 0, lng: 0 };
+                }
+
+                // Handle GeometryCollection by averaging centers of all geometries
+                if (feature.geometry.type === 'GeometryCollection') {
+                    let totalLat = 0, totalLng = 0, count = 0;
+                    if (feature.geometry.geometries) {
+                        feature.geometry.geometries.forEach(geom => {
+                            const tempFeature = { geometry: geom };
+                            const subCenter = this.getFeatureCenter(tempFeature);
+                            totalLat += subCenter.lat;
+                            totalLng += subCenter.lng;
+                            count++;
+                        });
+                    }
+                    return count > 0 ? { lat: totalLat / count, lng: totalLng / count } : { lat: 0, lng: 0 };
+                }
+
+                if (!feature.geometry.coordinates) {
                     return { lat: 0, lng: 0 };
                 }
 
                 let center = { lat: 0, lng: 0 };
                 let count = 0;
 
-                if (feature.geometry.type === 'Point') {
+                const type = feature.geometry.type;
+                if (type === 'Point') {
                     center = { lng: feature.geometry.coordinates[0], lat: feature.geometry.coordinates[1] };
-                } else if (feature.geometry.type === 'Polygon') {
+                } else if (type === 'MultiPoint' || type === 'LineString') {
+                    feature.geometry.coordinates.forEach(coord => {
+                        center.lng += coord[0];
+                        center.lat += coord[1];
+                        count++;
+                    });
+                } else if (type === 'Polygon') {
                     const coords = feature.geometry.coordinates[0]; // Use outer ring
                     coords.forEach(coord => {
                         center.lng += coord[0];
                         center.lat += coord[1];
                         count++;
                     });
-                } else if (feature.geometry.type === 'MultiPolygon') {
+                } else if (type === 'MultiLineString') {
+                    feature.geometry.coordinates.forEach(lineString => {
+                        lineString.forEach(coord => {
+                            center.lng += coord[0];
+                            center.lat += coord[1];
+                            count++;
+                        });
+                    });
+                } else if (type === 'MultiPolygon') {
                     feature.geometry.coordinates.forEach(polygon => {
                         polygon[0].forEach(coord => {
                             center.lng += coord[0];
@@ -1704,10 +3149,13 @@
                     
                     container.appendChild(link);
                     
-                    // Auto-download after a short delay
+                    // Auto-download after a short delay and clean up URL
                     setTimeout(() => {
                         link.click();
-                        URL.revokeObjectURL(url);
+                        // Clean up object URL after download completes
+                        setTimeout(() => {
+                            URL.revokeObjectURL(url);
+                        }, 1000);
                     }, 100 * (index + 1));
                 });
 
@@ -1718,9 +3166,19 @@
                 this.rawData = null;
                 this.features = [];
                 this.currentFileName = '';
+                this.areaCache.clear();
+                
+                if (this.previewTimeout) {
+                    clearTimeout(this.previewTimeout);
+                    this.previewTimeout = null;
+                }
+                this.previewAbortFlag = false;
 
                 document.getElementById('errorMessages').innerHTML = '';
                 document.getElementById('fileInput').value = '';
+                
+                // Close CRS warning modal if open
+                document.getElementById('crsWarningModal').classList.remove('show');
                 
                 // Reset all form inputs to their default state (except language selector)
                 const formElements = document.querySelectorAll('input, select, textarea');
@@ -1746,6 +3204,24 @@
                 if (filterSection) {
                     filterSection.classList.add('disabled');
                 }
+                
+                // Collapse all sub-filters
+                const subFilters = ['locationFilterSection', 'propertyFilterSection', 'areaFilterSection', 'typeFilterSection'];
+                subFilters.forEach(id => {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        section.classList.add('disabled');
+                    }
+                });
+                
+                // Hide filter preview panel
+                document.getElementById('filterPreviewPanel').style.display = 'none';
+                
+                // Hide and reset progress bar
+                const progressBar = document.getElementById('progressBar');
+                const progressFill = document.getElementById('progressFill');
+                progressBar.classList.add('hidden');
+                progressFill.style.width = '0%';
                 
                 // Show file drop area and hide processing options
                 document.getElementById('dropArea').classList.remove('hidden');
